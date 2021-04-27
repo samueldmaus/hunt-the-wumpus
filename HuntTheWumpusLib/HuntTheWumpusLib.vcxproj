@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Denizen.cpp" />
     <ClCompile Include="Hunter.cpp" />
@@ -95,6 +96,7 @@
     <ClCompile Include="Wumpus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Denizen.h" />
     <ClInclude Include="Hunter.h" />

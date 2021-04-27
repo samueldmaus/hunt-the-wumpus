@@ -6,7 +6,7 @@
 
 namespace HuntTheWumpus
 {
-	class Wumpus : public HuntTheWumpus::Denizen
+	class Wumpus : public Denizen
 	{
 	public:
 		explicit Wumpus(const int i);
@@ -19,9 +19,9 @@ namespace HuntTheWumpus
 
 		void GetPriority() override;
 
-		[[nodiscard]] const DenizenProperties& Properties() const;
+		[[nodiscard]] const DenizenProperties& Properties() const override;
 
-		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const;
+		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
 
 	private:
 		std::unique_ptr<HuntTheWumpus::DenizenIdentifier> m_denizen_identifier_;

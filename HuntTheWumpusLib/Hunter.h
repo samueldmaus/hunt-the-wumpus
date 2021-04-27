@@ -1,12 +1,14 @@
 ﻿#pragma once
 
 #include <vector>
+#include <memory>
 
+#include "Arrow.h"
 #include "Denizen.h"
 
 namespace HuntTheWumpus
 {
-	class Hunter : public HuntTheWumpus::Denizen
+	class Hunter : public Denizen
 	{
 	public:
 		explicit Hunter(const int i);
@@ -19,14 +21,15 @@ namespace HuntTheWumpus
 
 		void GetPriority() override;
 
-		[[nodiscard]] const DenizenProperties& Properties() const;
+		[[nodiscard]] const DenizenProperties& Properties() const override;
 
-		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const;
+		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
 
 	private:
-		DenizenIdentifier m_denizen_identifier_;
+		std::unique_ptr<DenizenIdentifier> m_denizen_identifier_;
 
-		DenizenProperties m_denizen_properties_;
-		
+		std::unique_ptr<DenizenProperties> m_denizen_properties_;
+
+		std::vector<std::unique_ptr<Arrow>> m_quiver_;
 	};
 }

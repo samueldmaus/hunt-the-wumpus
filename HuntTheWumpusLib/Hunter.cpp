@@ -3,8 +3,8 @@
 namespace HuntTheWumpus
 {
 	Hunter::Hunter(const int i)
-		: m_denizen_identifier_(HuntTheWumpus::DenizenIdentifier(HuntTheWumpus::Category::Hunter, i)),
-		m_denizen_properties_(HuntTheWumpus::DenizenProperties(true, false, false, true, true))
+		: m_denizen_identifier_(std::make_unique<DenizenIdentifier>(Category::Hunter, i)),
+		m_denizen_properties_(std::make_unique<DenizenProperties>(true, false, false, true, true))
 	{
 	}
 
@@ -22,12 +22,12 @@ namespace HuntTheWumpus
 
 	const DenizenProperties& Hunter::Properties() const
 	{
-		return m_denizen_properties_;
+		return *m_denizen_properties_;
 	}
 
 	const DenizenIdentifier& Hunter::GetIdentifier() const
 	{
-		return m_denizen_identifier_;
+		return *m_denizen_identifier_;
 	}
 	
 }

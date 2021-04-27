@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="TestBat.cpp" />
     <ClCompile Include="TestDenizen.cpp" />
+    <ClCompile Include="TestHunter.cpp" />
     <ClCompile Include="TestPit.cpp" />
     <ClCompile Include="TestWumpus.cpp" />
     <ClCompile Include="UnitTestHuntTheWumpus.cpp" />

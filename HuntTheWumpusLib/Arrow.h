@@ -6,16 +6,12 @@
 
 namespace HuntTheWumpus
 {
-	class Pit : public Denizen
+	class Arrow : public Denizen
 	{
 	public:
-		explicit Pit(const int i);
+		Arrow(const int i);
 
-		~Pit() override = default;
-
-		void ObserveCaveEntrance() override;
-
-		void ReportPresence() override;
+		~Arrow() override = default;
 
 		void GetPriority() override;
 
@@ -25,7 +21,7 @@ namespace HuntTheWumpus
 
 	private:
 		std::unique_ptr<DenizenIdentifier> m_denizen_identifier_;
-		
+
 		std::unique_ptr<DenizenProperties> m_denizen_properties_;
 	};
 }
