@@ -9,7 +9,7 @@ namespace HuntTheWumpus
 	class Arrow : public Denizen
 	{
 	public:
-		Arrow(const int i);
+		explicit Arrow(const int i);
 
 		~Arrow() override = default;
 

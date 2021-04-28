@@ -13,6 +13,16 @@ namespace HuntTheWumpus
 
 		~Pit() override = default;
 
+		Pit(const Pit& src);
+
+		Pit& operator=(const Pit& src);
+
+		Pit(Pit&& src) noexcept;
+
+		Pit& operator=(Pit&& src) noexcept;
+
+		void swap(Pit& src) noexcept;
+
 		void ObserveCaveEntrance() override;
 
 		void ReportPresence() override;

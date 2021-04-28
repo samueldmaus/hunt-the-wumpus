@@ -62,6 +62,7 @@ namespace TestHuntTheWumpus
     	const auto &properties = wumpusExtra.Properties();
 
     	CHECK_EQUAL(0, wumpusExtra.GetIdentifier().m_instance);
+    	CHECK_EQUAL(HuntTheWumpus::Category::Wumpus, wumpusExtra.GetIdentifier().m_category);
 
     	CHECK(!properties.m_carryableByBats);
         CHECK(!properties.m_isEdible);
@@ -79,6 +80,7 @@ namespace TestHuntTheWumpus
     	const auto &properties = wumpusExtra.Properties();
 
     	CHECK_EQUAL(0, wumpusExtra.GetIdentifier().m_instance);
+    	CHECK_EQUAL(HuntTheWumpus::Category::Wumpus, wumpusExtra.GetIdentifier().m_category);
 
     	CHECK(!properties.m_carryableByBats);
         CHECK(!properties.m_isEdible);

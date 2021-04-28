@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TestArrow.cpp" />
     <ClCompile Include="TestBat.cpp" />
     <ClCompile Include="TestDenizen.cpp" />
     <ClCompile Include="TestHunter.cpp" />
