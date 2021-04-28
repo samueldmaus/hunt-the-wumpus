@@ -13,6 +13,16 @@ namespace HuntTheWumpus
 
 		~Wumpus() override = default;
 
+		Wumpus(const Wumpus&) = delete;
+
+		Wumpus& operator=(const Wumpus&) = delete;
+		
+		Wumpus(Wumpus&& src) noexcept;
+
+		Wumpus& operator=(Wumpus&& src) noexcept;
+
+		void swap(Wumpus& src) noexcept;
+
 		void ObserveCaveEntrance() override;
 
 		void ReportPresence() override;

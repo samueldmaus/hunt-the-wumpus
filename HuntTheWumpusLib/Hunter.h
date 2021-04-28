@@ -15,6 +15,16 @@ namespace HuntTheWumpus
 
 		~Hunter() override = default;
 
+		Hunter(const Hunter&) = delete;
+
+		Hunter& operator=(const Hunter&) = delete;
+
+		Hunter(Hunter&& src) noexcept;
+
+		Hunter& operator=(Hunter&& src) noexcept;
+
+		void swap(Hunter& src) noexcept;
+
 		void EnterCave() override;
 
 		void ObserveCaveEntrance() override;
@@ -30,6 +40,6 @@ namespace HuntTheWumpus
 
 		std::unique_ptr<DenizenProperties> m_denizen_properties_;
 
-		std::vector<std::unique_ptr<Arrow>> m_quiver_;
+		std::vector<std::unique_ptr<Arrow>> m_quiver_ = {};
 	};
 }

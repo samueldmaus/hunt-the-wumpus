@@ -13,6 +13,16 @@ namespace HuntTheWumpus
 
 		~Arrow() override = default;
 
+		Arrow(const Arrow& src);
+
+		Arrow& operator=(const Arrow& src);
+
+		Arrow(Arrow&& src) noexcept;
+
+		Arrow& operator=(Arrow&& src) noexcept;
+
+		void swap(Arrow& src) noexcept;
+
 		void GetPriority() override;
 
 		[[nodiscard]] const DenizenProperties& Properties() const override;

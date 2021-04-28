@@ -12,7 +12,6 @@ namespace HuntTheWumpus
         Bat,
         Hunter,
         Arrow
-    	
     };
 
 	std::strong_ordering operator<=>(Category& lhs, Category& rhs);
@@ -45,9 +44,13 @@ namespace HuntTheWumpus
 		DenizenProperties(const bool c, const bool fW, const bool fH, const bool e, const bool r);
 		
 		bool m_carryableByBats;
+		
 		bool m_fatalToWumpus;
+
 		bool m_fatalToHunter;
+
 		bool m_isEdible;
+
 		bool m_reportMovement;
 	};
 
@@ -55,8 +58,16 @@ namespace HuntTheWumpus
 	{
 	public:
 		Denizen() = default;
-		
+
 		virtual ~Denizen() = default; 
+
+		Denizen(const Denizen&) = default;
+
+		Denizen& operator=(const Denizen&) = default;
+
+		Denizen(Denizen&&) noexcept = default;
+
+		Denizen& operator=(Denizen&&) noexcept = default;
 		
 		virtual void ObserveCaveEntrance();
 		

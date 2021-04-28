@@ -30,6 +30,7 @@ namespace HuntTheWumpus
     	return static_cast<int>(lhs) <=> static_cast<int>(rhs);
     }
 
+	
 	// DENIZEN IDENTIFIER
     DenizenIdentifier::DenizenIdentifier(const Category c, const int i)
 	    : m_category(c), m_instance(i)
@@ -45,11 +46,13 @@ namespace HuntTheWumpus
         return m_category <=> rhs.m_category;
     }
 
+	
 	// DENIZEN IDENTIFIER HASHING
 	size_t DenizenIdentifierHasher::operator()(const DenizenIdentifier& d) const
     {
         return hash_combine(static_cast<size_t>(d.m_category), d.m_instance);
     }
+
 	
 	// DENIZEN PROPERTIES
 	DenizenProperties::DenizenProperties(const bool c, const bool fW, const bool fH, const bool e, const bool r)
