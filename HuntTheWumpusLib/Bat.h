@@ -13,6 +13,16 @@ namespace HuntTheWumpus
 
 		~Bat() override = default;
 
+		Bat(const Bat& src);
+
+		Bat& operator=(const Bat& src);
+
+		Bat(Bat&& src) noexcept;
+
+		Bat& operator=(Bat&& src) noexcept;
+
+		void swap(Bat& src) noexcept;
+
 		void ObserveCaveEntrance() override;
 
 		void ReportPresence() override;
