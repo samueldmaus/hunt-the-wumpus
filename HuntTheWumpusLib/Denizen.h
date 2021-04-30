@@ -23,7 +23,7 @@ namespace HuntTheWumpus
 
 		std::strong_ordering operator<=>(const DenizenIdentifier& rhs) const;
 
-		bool operator==(const DenizenIdentifier&) const = default;
+		bool operator==(const DenizenIdentifier& rhs) const;
 		
 		Category m_category;
 		
