@@ -53,40 +53,4 @@ namespace TestHuntTheWumpus
 
 		CHECK(hunterExtra.GetIdentifier() == hunterExtraExtra.GetIdentifier());
 	}
-
-	TEST(HunterSuite, Hunter_Move_Constructor)
-	{
-		HuntTheWumpus::Hunter hunter(0);
-
-		const auto hunterExtra(std::move(hunter));
-
-		const auto& properties = hunterExtra.Properties();
-
-		CHECK_EQUAL(0, hunterExtra.GetIdentifier().m_instance);
-		CHECK_EQUAL(HuntTheWumpus::Category::Hunter, hunterExtra.GetIdentifier().m_category);
-
-		CHECK(properties.m_carryableByBats);
-		CHECK(properties.m_isEdible);
-		CHECK(properties.m_reportMovement);
-		CHECK(!properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
-	}
-
-	TEST(HunterSuite, Hunter_Move_Assignment)
-	{
-		HuntTheWumpus::Hunter hunter(0);
-
-		const auto hunterExtra = std::move(hunter);
-
-		const auto& properties = hunterExtra.Properties();
-
-		CHECK_EQUAL(0, hunterExtra.GetIdentifier().m_instance);
-		CHECK_EQUAL(HuntTheWumpus::Category::Hunter, hunterExtra.GetIdentifier().m_category);
-
-		CHECK(properties.m_carryableByBats);
-		CHECK(properties.m_isEdible);
-		CHECK(properties.m_reportMovement);
-		CHECK(!properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
-	}
 }

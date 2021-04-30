@@ -19,11 +19,9 @@ namespace HuntTheWumpus
 
 		Hunter& operator=(const Hunter&) = delete;
 
-		Hunter(Hunter&& src) noexcept;
+		Hunter(Hunter&& src) noexcept = delete;
 
-		Hunter& operator=(Hunter&& src) noexcept;
-
-		void swap(Hunter& src) noexcept;
+		Hunter& operator=(Hunter&& src) noexcept = delete;
 
 		void EnterCave() override;
 

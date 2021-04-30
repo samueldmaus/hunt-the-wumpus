@@ -8,26 +8,6 @@ namespace HuntTheWumpus
 	{
 	}
 
-	Hunter::Hunter(Hunter&& src) noexcept
-		: m_denizen_identifier_(std::move(src.m_denizen_identifier_)), m_denizen_properties_(std::move(src.m_denizen_properties_))
-	{
-	}
-
-	Hunter& Hunter::operator=(Hunter&& src) noexcept
-	{
-		if(&src != this)
-		{
-			Hunter::swap(src);
-		}
-		return *this;
-	}
-
-	void Hunter::swap(Hunter& src) noexcept
-	{
-		std::swap(m_denizen_identifier_, src.m_denizen_identifier_);
-		std::swap(m_denizen_properties_, src.m_denizen_properties_);
-	}
-
 	void Hunter::EnterCave()
 	{
 	}
