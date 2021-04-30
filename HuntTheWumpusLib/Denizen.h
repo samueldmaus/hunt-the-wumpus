@@ -61,13 +61,13 @@ namespace HuntTheWumpus
 
 		virtual ~Denizen() = default; 
 
-		Denizen(const Denizen&) = default;
+		Denizen(const Denizen&) = delete;
 
-		Denizen& operator=(const Denizen&) = default;
+		Denizen& operator=(const Denizen&) = delete;
 
-		Denizen(Denizen&&) noexcept = default;
+		Denizen(Denizen&&) noexcept = delete;
 
-		Denizen& operator=(Denizen&&) noexcept = default;
+		Denizen& operator=(Denizen&&) noexcept = delete;
 		
 		virtual void ObserveCaveEntrance();
 		

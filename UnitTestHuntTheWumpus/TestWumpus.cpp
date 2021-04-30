@@ -53,40 +53,4 @@ namespace TestHuntTheWumpus
 
 		CHECK(wumpusExtra.GetIdentifier() == wumpusExtraExtra.GetIdentifier());
 	}
-
-	TEST(WumpusSuite, Wumpus_Move_Constructor)
-	{
-		HuntTheWumpus::Wumpus wumpus(0);
-
-		const auto wumpusExtra(std::move(wumpus));
-
-		const auto& properties = wumpusExtra.Properties();
-
-		CHECK_EQUAL(0, wumpusExtra.GetIdentifier().m_instance);
-		CHECK_EQUAL(HuntTheWumpus::Category::Wumpus, wumpusExtra.GetIdentifier().m_category);
-
-		CHECK(!properties.m_carryableByBats);
-		CHECK(!properties.m_isEdible);
-		CHECK(!properties.m_reportMovement);
-		CHECK(properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
-	}
-
-	TEST(WumpusSuite, Wumpus_Move_Assignment)
-	{
-		HuntTheWumpus::Wumpus wumpus(0);
-
-		const auto wumpusExtra = std::move(wumpus);
-
-		const auto& properties = wumpusExtra.Properties();
-
-		CHECK_EQUAL(0, wumpusExtra.GetIdentifier().m_instance);
-		CHECK_EQUAL(HuntTheWumpus::Category::Wumpus, wumpusExtra.GetIdentifier().m_category);
-
-		CHECK(!properties.m_carryableByBats);
-		CHECK(!properties.m_isEdible);
-		CHECK(!properties.m_reportMovement);
-		CHECK(properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
-	}
 }

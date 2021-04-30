@@ -13,15 +13,13 @@ namespace HuntTheWumpus
 
 		~Arrow() override = default;
 
-		Arrow(const Arrow& src);
+		Arrow(const Arrow& src) = delete;
 
-		Arrow& operator=(const Arrow& src);
+		Arrow& operator=(const Arrow& src) = delete;
 
-		Arrow(Arrow&& src) noexcept;
+		Arrow(Arrow&& src) noexcept = delete;
 
-		Arrow& operator=(Arrow&& src) noexcept;
-
-		void swap(Arrow& src) noexcept;
+		Arrow& operator=(Arrow&& src) noexcept = delete;
 
 		void GetPriority() override;
 

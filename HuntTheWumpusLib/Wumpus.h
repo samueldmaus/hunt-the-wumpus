@@ -17,11 +17,9 @@ namespace HuntTheWumpus
 
 		Wumpus& operator=(const Wumpus&) = delete;
 		
-		Wumpus(Wumpus&& src) noexcept;
+		Wumpus(Wumpus&& src) noexcept = delete;
 
-		Wumpus& operator=(Wumpus&& src) noexcept;
-
-		void swap(Wumpus& src) noexcept;
+		Wumpus& operator=(Wumpus&& src) noexcept = delete;
 
 		void ObserveCaveEntrance() override;
 
