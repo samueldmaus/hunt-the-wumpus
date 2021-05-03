@@ -25,13 +25,5 @@ namespace HuntTheWumpus
 
 		void GetPriority() override;
 
-		[[nodiscard]] const DenizenProperties& Properties() const override;
-
-		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
-
-	private:
-		DenizenIdentifier m_denizen_identifier_;
-
-		DenizenProperties m_denizen_properties_;
 	};
 }

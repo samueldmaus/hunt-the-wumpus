@@ -3,8 +3,7 @@
 namespace HuntTheWumpus
 {
 	Wumpus::Wumpus(const int i)
-		: m_denizen_identifier_(Category::Wumpus, i),
-		m_denizen_properties_(false, false, true, false, false)
+		: Denizen(Category::Wumpus, i, false, false, true, false, false)
 	{
 	}
 
@@ -18,15 +17,5 @@ namespace HuntTheWumpus
 
 	void Wumpus::GetPriority()
 	{
-	}
-
-	const DenizenProperties& Wumpus::Properties() const
-	{
-		return m_denizen_properties_;
-	}
-
-	const DenizenIdentifier& Wumpus::GetIdentifier() const
-	{
-		return m_denizen_identifier_;
 	}
 }

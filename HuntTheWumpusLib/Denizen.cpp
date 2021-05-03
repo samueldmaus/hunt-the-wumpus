@@ -72,6 +72,11 @@ namespace HuntTheWumpus
 	}
 
 	// DENIZEN
+	Denizen::Denizen(Category c, const int i, bool carryableByBats, bool fatalToWumpus, bool fatalToHunter, bool isEdible, bool reportMovement)
+		: m_denizen_identifier_(c, i), m_denizen_properties_(carryableByBats, fatalToWumpus, fatalToHunter, isEdible, reportMovement)
+	{
+	}
+	
 	void Denizen::ObserveCaveEntrance()
 	{
 	}
@@ -90,6 +95,16 @@ namespace HuntTheWumpus
 
 	void Denizen::GetPriority()
 	{
+	}
+
+	const DenizenProperties& Denizen::Properties() const
+	{
+		return m_denizen_properties_;
+	}
+
+	const DenizenIdentifier& Denizen::GetIdentifier() const
+	{
+		return m_denizen_identifier_;
 	}
 
 	std::ostream& operator<<(std::ostream& out, const Category& value)

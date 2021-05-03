@@ -57,7 +57,7 @@ namespace HuntTheWumpus
 	class Denizen
 	{
 	public:
-		Denizen() = default;
+		Denizen(Category c, const int i, bool carryableByBats, bool fatalToWumpus, bool fatalToHunter, bool isEdible, bool reportMovement);
 
 		virtual ~Denizen() = default; 
 
@@ -79,9 +79,13 @@ namespace HuntTheWumpus
 		
 		virtual void GetPriority();
 
-		[[nodiscard]] virtual const DenizenProperties& Properties() const = 0;
+		[[nodiscard]] virtual const DenizenProperties& Properties() const;
 
-		[[nodiscard]] virtual const DenizenIdentifier& GetIdentifier() const = 0;
+		[[nodiscard]] virtual const DenizenIdentifier& GetIdentifier() const;
+
+		DenizenIdentifier m_denizen_identifier_;
+
+		DenizenProperties m_denizen_properties_;
 	};
 
     std::ostream& operator<<(std::ostream& out, const Category& value);
