@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-#include <vector>
-
-#include "Arrow.h"
 #include "Denizen.h"
 
 namespace HuntTheWumpus
