@@ -3,8 +3,8 @@
 namespace HuntTheWumpus
 {
 	HuntTheWumpus::Bat::Bat(const int i)
-		: m_denizen_identifier_(std::make_unique<DenizenIdentifier>(Category::Bat, i)),
-		m_denizen_properties_(std::make_unique<DenizenProperties>(false, false, false, false, false))
+		: m_denizen_identifier_(Category::Bat, i),
+		m_denizen_properties_(false, false, false, false, false)
 	{
 	}
 
@@ -22,11 +22,11 @@ namespace HuntTheWumpus
 
 	const DenizenProperties& Bat::Properties() const
 	{
-		return *m_denizen_properties_;
+		return m_denizen_properties_;
 	}
 
 	const DenizenIdentifier& Bat::GetIdentifier() const
 	{
-		return *m_denizen_identifier_;
+		return m_denizen_identifier_;
 	}
 }

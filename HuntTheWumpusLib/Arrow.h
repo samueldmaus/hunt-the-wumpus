@@ -28,8 +28,8 @@ namespace HuntTheWumpus
 		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
 
 	private:
-		std::unique_ptr<DenizenIdentifier> m_denizen_identifier_;
+		DenizenIdentifier m_denizen_identifier_;
 
-		std::unique_ptr<DenizenProperties> m_denizen_properties_;
+		DenizenProperties m_denizen_properties_;
 	};
 }

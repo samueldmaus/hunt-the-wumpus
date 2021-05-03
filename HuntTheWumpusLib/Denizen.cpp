@@ -59,7 +59,9 @@ namespace HuntTheWumpus
 	// DENIZEN IDENTIFIER HASHING
 	size_t DenizenIdentifierHasher::operator()(const DenizenIdentifier& d) const
 	{
-		return hash_combine(static_cast<size_t>(d.m_category), d.m_instance);
+		const auto h1 = std::hash<int>{}(static_cast<int>(d.m_category));
+		const auto h2 = std::hash<int>{}(d.m_instance);
+		return hash_combine(h1, h2);
 	}
 
 

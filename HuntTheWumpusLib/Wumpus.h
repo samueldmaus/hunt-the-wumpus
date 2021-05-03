@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <memory>
-
 #include "Denizen.h"
 
 namespace HuntTheWumpus
@@ -32,8 +30,8 @@ namespace HuntTheWumpus
 		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
 
 	private:
-		std::unique_ptr<HuntTheWumpus::DenizenIdentifier> m_denizen_identifier_;
+		HuntTheWumpus::DenizenIdentifier m_denizen_identifier_;
 		
-		std::unique_ptr<HuntTheWumpus::DenizenProperties> m_denizen_properties_;
+		HuntTheWumpus::DenizenProperties m_denizen_properties_;
 	};
 }

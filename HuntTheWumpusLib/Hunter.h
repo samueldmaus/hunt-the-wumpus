@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <vector>
-#include <memory>
 
 #include "Arrow.h"
 #include "Denizen.h"
@@ -34,10 +33,10 @@ namespace HuntTheWumpus
 		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const override;
 
 	private:
-		std::unique_ptr<DenizenIdentifier> m_denizen_identifier_;
+		DenizenIdentifier m_denizen_identifier_;
 
-		std::unique_ptr<DenizenProperties> m_denizen_properties_;
+		DenizenProperties m_denizen_properties_;
 
-		std::vector<std::unique_ptr<Arrow>> m_quiver_ = {};
+		std::vector<Arrow> m_quiver_ = {};
 	};
 }

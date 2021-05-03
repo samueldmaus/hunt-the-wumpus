@@ -3,8 +3,8 @@
 namespace HuntTheWumpus
 {
 	Arrow::Arrow(const int i)
-		: m_denizen_identifier_(std::make_unique<DenizenIdentifier>(Category::Arrow, i)),
-		m_denizen_properties_(std::make_unique<DenizenProperties>(false, true, true, false, false))
+		: m_denizen_identifier_(Category::Arrow, i),
+		m_denizen_properties_(false, true, true, false, false)
 	{
 	}
 	
@@ -14,11 +14,11 @@ namespace HuntTheWumpus
 	
 	const DenizenProperties& Arrow::Properties() const
 	{
-		return *m_denizen_properties_;
+		return m_denizen_properties_;
 	}
 	
 	const DenizenIdentifier& Arrow::GetIdentifier() const
 	{
-		return *m_denizen_identifier_;
+		return m_denizen_identifier_;
 	}
 }
