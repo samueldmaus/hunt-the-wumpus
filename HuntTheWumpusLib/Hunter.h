@@ -27,8 +27,5 @@ namespace HuntTheWumpus
 		void ObserveCaveEntrance() override;
 
 		void GetPriority() override;
-
-	private:
-		std::vector<Arrow> m_quiver_ = {};
 	};
 }
