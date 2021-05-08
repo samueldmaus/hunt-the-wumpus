@@ -16,48 +16,36 @@ namespace HuntTheWumpus
 
 	std::strong_ordering operator<=>(Category& lhs, Category& rhs);
 
-	class DenizenIdentifier
+	struct DenizenIdentifier
 	{
-	public:
-		DenizenIdentifier(const Category c, const int i);
+		Category m_category;
+		
+		int m_instance;
 
 		std::strong_ordering operator<=>(const DenizenIdentifier& rhs) const;
 
 		bool operator==(const DenizenIdentifier& rhs) const;
-		
-		Category m_category;
-		
-		int m_instance;
+
 	};
 
-	class DenizenIdentifierHasher
+	struct DenizenIdentifierHasher
 	{
-	public:
-		DenizenIdentifierHasher() = default;
-
 		size_t operator()(const DenizenIdentifier& d) const;
 	};
 
-	class DenizenProperties
-	{
-	public:
-		DenizenProperties(const bool c, const bool fW, const bool fH, const bool e, const bool r);
-		
-		bool m_carryableByBats;
-		
-		bool m_fatalToWumpus;
-
-		bool m_fatalToHunter;
-
-		bool m_isEdible;
-
-		bool m_reportMovement;
-	};
+    struct DenizenProperties
+    {
+        bool m_carryableByBats = false;
+        bool m_fatalToWumpus = false;
+        bool m_fatalToHunter = false;
+        bool m_isEdible = false;
+        bool m_reportMovement = false;
+    };
 
 	class Denizen
 	{
 	public:
-		Denizen(Category c, const int i, bool carryableByBats, bool fatalToWumpus, bool fatalToHunter, bool isEdible, bool reportMovement);
+		Denizen(const DenizenIdentifier& identifier, DenizenProperties&& props);
 
 		virtual ~Denizen() = default; 
 

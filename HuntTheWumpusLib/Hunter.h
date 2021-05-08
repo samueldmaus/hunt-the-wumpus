@@ -4,10 +4,10 @@
 
 namespace HuntTheWumpus
 {
-	class Hunter : public Denizen
+	class Hunter final : public Denizen
 	{
 	public:
-		explicit Hunter(const int i);
+		explicit Hunter();
 
 		~Hunter() override = default;
 

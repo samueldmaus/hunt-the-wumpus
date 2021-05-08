@@ -3,7 +3,7 @@
 namespace HuntTheWumpus
 {
 	HuntTheWumpus::Bat::Bat(const int i)
-		: Denizen(Category::Bat, i, false, false, false, false, false)
+		: Denizen({Category::Bat, i}, { false, false, false, false, false })
 	{
 	}
 

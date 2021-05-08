@@ -1,5 +1,7 @@
 #include <TestHarness.h>
 
+#include <iostream>
+
 #include "Wumpus.h"
 
 namespace TestHuntTheWumpus

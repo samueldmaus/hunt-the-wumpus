@@ -3,7 +3,7 @@
 namespace HuntTheWumpus
 {
 	Wumpus::Wumpus(const int i)
-		: Denizen(Category::Wumpus, i, false, false, true, false, false)
+		: Denizen({Category::Wumpus, i}, {false, false, true, false, false})
 	{
 	}
 

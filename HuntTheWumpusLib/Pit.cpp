@@ -3,7 +3,7 @@
 namespace HuntTheWumpus
 {
 	Pit::Pit(const int i)
-		: Denizen(Category::Pit, i, false, false, true, false, false)
+		: Denizen({ Category::Pit, i }, { false, false, true, false, false })
 	{
 	}
 

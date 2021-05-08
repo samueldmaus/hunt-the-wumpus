@@ -2,8 +2,8 @@
 
 namespace HuntTheWumpus
 {
-	Hunter::Hunter(const int i)
-		: Denizen(Category::Hunter, i, true, false, false, true, true)
+	Hunter::Hunter()
+		: Denizen({Category::Hunter, 0}, {true, false, false, true, true})
 	{
 	}
 

@@ -30,13 +30,6 @@ namespace HuntTheWumpus
 		return static_cast<int>(lhs) <=> static_cast<int>(rhs);
 	}
 
-
-	// DENIZEN IDENTIFIER
-	DenizenIdentifier::DenizenIdentifier(const Category c, const int i)
-		: m_category(c), m_instance(i)
-	{
-	}
-
 	std::strong_ordering DenizenIdentifier::operator<=>(const DenizenIdentifier& rhs) const
 	{
 		if (m_category == rhs.m_category)
@@ -64,16 +57,9 @@ namespace HuntTheWumpus
 		return hash_combine(h1, h2);
 	}
 
-
-	// DENIZEN PROPERTIES
-	DenizenProperties::DenizenProperties(const bool c, const bool fW, const bool fH, const bool e, const bool r)
-		: m_carryableByBats(c), m_fatalToWumpus(fW), m_fatalToHunter(fH), m_isEdible(e), m_reportMovement(r)
-	{
-	}
-
 	// DENIZEN
-	Denizen::Denizen(Category c, const int i, bool carryableByBats, bool fatalToWumpus, bool fatalToHunter, bool isEdible, bool reportMovement)
-		: m_denizen_identifier_(c, i), m_denizen_properties_(carryableByBats, fatalToWumpus, fatalToHunter, isEdible, reportMovement)
+	Denizen::Denizen(const DenizenIdentifier& identifier, DenizenProperties&& props)
+		: m_denizen_identifier_(identifier), m_denizen_properties_(props)
 	{
 	}
 	
