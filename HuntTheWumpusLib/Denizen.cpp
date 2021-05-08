@@ -41,20 +41,16 @@ namespace HuntTheWumpus
 
 	bool DenizenIdentifier::operator==(const DenizenIdentifier& rhs) const
 	{
-		if (m_category == rhs.m_category)
-		{
-			return m_instance == rhs.m_instance;
-		}
-		return m_category == rhs.m_category;
+		return ((*this) <=> rhs) == std::strong_ordering::equal;
 	}
 
 
 	// DENIZEN IDENTIFIER HASHING
 	size_t DenizenIdentifierHasher::operator()(const DenizenIdentifier& d) const
 	{
-		const auto h1 = std::hash<int>{}(static_cast<int>(d.m_category));
-		const auto h2 = std::hash<int>{}(d.m_instance);
-		return hash_combine(h1, h2);
+		auto result = 0ull;
+		result = hash_combine(result, std::hash<int>{}(static_cast<int>(d.m_category)));
+		return hash_combine(result, std::hash<int>{}(d.m_instance));
 	}
 
 	// DENIZEN
