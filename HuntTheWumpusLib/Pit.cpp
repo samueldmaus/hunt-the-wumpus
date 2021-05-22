@@ -1,21 +1,15 @@
 ﻿#include "Pit.h"
 
+#include "Context.h"
+
 namespace HuntTheWumpus
 {
-	Pit::Pit(const int i)
-		: Denizen({ Category::Pit, i }, { false, false, true, false, false })
-	{
-	}
-
-	void Pit::ObserveCaveEntrance()
-	{
-	}
-
-	void Pit::ReportPresence()
-	{
-	}
-
-	void Pit::GetPriority()
-	{
-	}
+    Pit::Pit(const int pitInstance, Context& providers)
+        : Denizen({ Category::Pit, pitInstance }, { false, false, true, false, false }, providers)
+    {
+    }
+    int Pit::GetPriority() const
+    {
+        return 2;
+    }
 }

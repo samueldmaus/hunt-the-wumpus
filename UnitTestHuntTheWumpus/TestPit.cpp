@@ -2,54 +2,36 @@
 
 #include "Pit.h"
 
+#include "Hunter.h"
+
+#include "TestHelperTestEnvironment.h"
+
 namespace TestHuntTheWumpus
 {
-	TEST(PitSuite, Pit_HasProperAttributes)
-	{
-		const HuntTheWumpus::Pit pit(1);
+    TEST(PitSuite, Pit_HasProperAttributes)
+    {
+        TestEnvironment env;
 
-		const auto& properties = pit.Properties();
+        const HuntTheWumpus::Pit pit(0, env.m_context);
 
-		CHECK(!properties.m_carryableByBats);
-		CHECK(!properties.m_isEdible);
-		CHECK(!properties.m_reportMovement);
-		CHECK(properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
+        const auto &properties = pit.Properties();
 
-		const auto& id = pit.GetIdentifier();
+        CHECK(!properties.m_carryableByBats);
+        CHECK(!properties.m_isEdible);
+        CHECK(!properties.m_reportMovement);
+        CHECK(properties.m_fatalToHunter);
+        CHECK(!properties.m_fatalToWumpus);
 
-		CHECK_EQUAL(HuntTheWumpus::Category::Pit, id.m_category);
-		CHECK_EQUAL(1, id.m_instance);
-	}
+        const auto& id = pit.GetIdentifier();
 
-	TEST(PitSuite, Pit_Hashing_UniqueHashes)
-	{
-		const HuntTheWumpus::Pit pit(0);
+        CHECK_EQUAL(HuntTheWumpus::Category::Pit, id.m_category);
+    }
 
-		const HuntTheWumpus::Pit pitExtra(1);
+	TEST(PitSuite, Pit_GetPriority)
+    {
+		TestEnvironment env;
 
-		const HuntTheWumpus::Pit pitExtraExtra(1);
-
-		const HuntTheWumpus::DenizenIdentifierHasher hasher;
-
-		const auto hash1 = hasher(pit.GetIdentifier());
-		const auto hash2 = hasher(pitExtra.GetIdentifier());
-		const auto hash3 = hasher(pitExtraExtra.GetIdentifier());
-
-		CHECK(hash1 != hash2);
-		CHECK_EQUAL(hash2, hash3);
-	}
-
-	TEST(PitSuite, Pit_Comparison_ProperSorting)
-	{
-		const HuntTheWumpus::Pit pit(1);
-
-		const HuntTheWumpus::Pit pitExtra(0);
-
-		const HuntTheWumpus::Pit pitExtraExtra(1);
-
-		CHECK(pit.GetIdentifier() <=> pitExtra.GetIdentifier() == std::strong_ordering::greater);
-
-		CHECK(pit.GetIdentifier() == pitExtraExtra.GetIdentifier());
-	}
+        const HuntTheWumpus::Pit pit(0, env.m_context);
+    	CHECK_EQUAL(2, pit.GetPriority());
+    }
 }

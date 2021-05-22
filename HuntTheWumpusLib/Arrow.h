@@ -18,4 +18,3 @@ namespace HuntTheWumpus
         Arrow& operator=(Arrow&&) = delete;
     };
 }
-}
