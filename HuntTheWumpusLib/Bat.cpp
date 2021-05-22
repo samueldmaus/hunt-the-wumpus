@@ -1,21 +1,16 @@
 ﻿#include "Bat.h"
 
+#include "Cave.h"
+#include "Context.h"
+
 namespace HuntTheWumpus
 {
-	HuntTheWumpus::Bat::Bat(const int i)
-		: Denizen({Category::Bat, i}, { false, false, false, false, false })
-	{
-	}
-
-	void Bat::ObserveCaveEntrance()
-	{
-	}
-
-	void Bat::ReportPresence()
-	{
-	}
-
-	void Bat::GetPriority()
-	{
-	}
+    Bat::Bat(const int batInstance, Context& providers)
+        : Denizen(DenizenIdentifier{ Category::Bat, batInstance }, { false, false, false, false, false }, providers)
+    {
+    }
+    int Bat::GetPriority() const
+    {
+        return 1;
+    }
 }

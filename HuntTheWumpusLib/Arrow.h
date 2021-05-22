@@ -1,26 +1,21 @@
 ﻿#pragma once
 
-#include <memory>
-
 #include "Denizen.h"
 
 namespace HuntTheWumpus
 {
-	class Arrow : public Denizen
-	{
-	public:
-		explicit Arrow(const int i);
+    class Arrow final : public Denizen
+    {
+    public:
+        Arrow(int arrowInstance, Context& providers);
+        ~Arrow() override = default;
 
-		~Arrow() override = default;
-
-		Arrow(const Arrow& src) = delete;
-
-		Arrow& operator=(const Arrow& src) = delete;
-
-		Arrow(Arrow&& src) noexcept = delete;
-
-		Arrow& operator=(Arrow&& src) noexcept = delete;
-
-		void GetPriority() override;
-	};
+    	[[nodiscard]] int GetPriority() const override;
+    	
+        Arrow(const Arrow&) = delete;
+        Arrow(Arrow&&) = delete;
+        Arrow& operator=(const Arrow&) = delete;
+        Arrow& operator=(Arrow&&) = delete;
+    };
+}
 }
