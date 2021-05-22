@@ -67,9 +67,11 @@ namespace HuntTheWumpus
 		
 		virtual void GetPriority();
 
-		[[nodiscard]] virtual const DenizenProperties& Properties() const;
+		[[nodiscard]] const DenizenProperties& Properties() const;
 
-		[[nodiscard]] virtual const DenizenIdentifier& GetIdentifier() const;
+		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const;
+
+	private:
 
 		DenizenIdentifier m_denizen_identifier_;
 

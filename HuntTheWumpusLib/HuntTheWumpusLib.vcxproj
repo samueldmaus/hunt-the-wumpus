@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="Cave.h" />
     <ClInclude Include="Denizen.h" />
     <ClInclude Include="Hunter.h" />
     <ClInclude Include="Pit.h" />
