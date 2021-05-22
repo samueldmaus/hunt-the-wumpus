@@ -90,7 +90,9 @@
   <ItemGroup>
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Cave.cpp" />
     <ClCompile Include="Denizen.cpp" />
+    <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Pit.cpp" />
     <ClCompile Include="Wumpus.cpp" />
@@ -99,9 +101,12 @@
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Cave.h" />
+    <ClInclude Include="Context.h" />
     <ClInclude Include="Denizen.h" />
+    <ClInclude Include="Dungeon.h" />
     <ClInclude Include="Hunter.h" />
     <ClInclude Include="Pit.h" />
+    <ClInclude Include="RandomProvider.h" />
     <ClInclude Include="Wumpus.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

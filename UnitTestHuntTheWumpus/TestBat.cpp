@@ -2,54 +2,36 @@
 
 #include "Bat.h"
 
+#include "Cave.h"
+
+#include "TestHelperTestEnvironment.h"
+
 namespace TestHuntTheWumpus
 {
-	TEST(BatSuite, Bat_HasProperAttributes)
-	{
-		const HuntTheWumpus::Bat bat(0);
+    TEST(BatSuite, Bat_HasProperAttributes)
+    {
+        TestEnvironment env;
 
-		const auto& properties = bat.Properties();
+        const HuntTheWumpus::Bat bat(0, env.m_context);
 
-		CHECK(!properties.m_carryableByBats);
-		CHECK(!properties.m_isEdible);
-		CHECK(!properties.m_reportMovement);
-		CHECK(!properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
+        const auto &properties = bat.Properties();
 
-		const auto& id = bat.GetIdentifier();
+        CHECK(!properties.m_carryableByBats);
+        CHECK(!properties.m_isEdible);
+        CHECK(!properties.m_reportMovement);
+        CHECK(!properties.m_fatalToHunter);
+        CHECK(!properties.m_fatalToWumpus);
 
-		CHECK_EQUAL(HuntTheWumpus::Category::Bat, id.m_category);
-		CHECK_EQUAL(0, id.m_instance);
-	}
+        const auto& id = bat.GetIdentifier();
 
-	TEST(BatSuite, Bat_Hashing_UniqueHashes)
-	{
-		const HuntTheWumpus::Bat bat(1);
+        CHECK_EQUAL(HuntTheWumpus::Category::Bat, id.m_category);
+    }
 
-		const HuntTheWumpus::Bat batExtra(2);
+	TEST(BatSuite, Bat_GetPriority)
+    {
+		TestEnvironment env;
 
-		const HuntTheWumpus::Bat batExtraExtra(1);
-
-		const HuntTheWumpus::DenizenIdentifierHasher hasher;
-
-		const auto hash1 = hasher(bat.GetIdentifier());
-		const auto hash2 = hasher(batExtra.GetIdentifier());
-		const auto hash3 = hasher(batExtraExtra.GetIdentifier());
-
-		CHECK(hash1 != hash2);
-		CHECK_EQUAL(hash1, hash3);
-	}
-
-	TEST(BatSuite, Bat_Comparison_Proper_Sorting)
-	{
-		const HuntTheWumpus::Bat bat(1);
-
-		const HuntTheWumpus::Bat batExtra(0);
-
-		const HuntTheWumpus::Bat batExtraExtra(0);
-
-		CHECK(bat.GetIdentifier() <=> batExtra.GetIdentifier() == std::strong_ordering::greater);
-
-		CHECK(batExtra.GetIdentifier() == batExtraExtra.GetIdentifier());
-	}
+        const HuntTheWumpus::Bat bat(0, env.m_context);
+    	CHECK_EQUAL(1, bat.GetPriority());
+    }
 }

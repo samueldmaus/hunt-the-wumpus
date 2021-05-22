@@ -4,25 +4,19 @@
 
 namespace HuntTheWumpus
 {
-	class Hunter final : public Denizen
-	{
-	public:
-		explicit Hunter();
+    class Arrow;
 
-		~Hunter() override = default;
+    class Hunter final : public Denizen
+    {
+    public:
+        explicit Hunter(Context& providers);
+        ~Hunter() override = default;
 
-		Hunter(const Hunter&) = delete;
+    	[[nodiscard]] int GetPriority() const override;
 
-		Hunter& operator=(const Hunter&) = delete;
-
-		Hunter(Hunter&& src) noexcept = delete;
-
-		Hunter& operator=(Hunter&& src) noexcept = delete;
-
-		void EnterCave() override;
-
-		void ObserveCaveEntrance() override;
-
-		void GetPriority() override;
-	};
+        Hunter(const Hunter&) = delete;
+        Hunter(Hunter&&) = delete;
+        Hunter& operator=(const Hunter&) = delete;
+        Hunter& operator=(Hunter&&) = delete;
+    };
 }

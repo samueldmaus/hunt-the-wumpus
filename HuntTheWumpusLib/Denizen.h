@@ -1,10 +1,14 @@
 #pragma once
 
 #include <compare>
-#include <iosfwd>
+#include <memory>
 
 namespace HuntTheWumpus
 {
+    class Cave;
+    class IRandomProvider;
+    struct Context;
+
     enum class Category
     {
         Wumpus,
@@ -14,24 +18,19 @@ namespace HuntTheWumpus
         Arrow
     };
 
-	std::strong_ordering operator<=>(Category& lhs, Category& rhs);
+    struct DenizenIdentifier
+    {
+        Category m_category;
+        int m_instance;
 
-	struct DenizenIdentifier
-	{
-		Category m_category;
-		
-		int m_instance;
+        bool operator==(const DenizenIdentifier &other) const;
+        std::strong_ordering operator <=>(const DenizenIdentifier &other) const;
+    };
 
-		std::strong_ordering operator<=>(const DenizenIdentifier& rhs) const;
-
-		bool operator==(const DenizenIdentifier& rhs) const;
-
-	};
-
-	struct DenizenIdentifierHasher
-	{
-		size_t operator()(const DenizenIdentifier& d) const;
-	};
+    struct DenizenIdentifierHasher
+    {
+        size_t operator()(const DenizenIdentifier &id) const;
+    };
 
     struct DenizenProperties
     {
@@ -42,41 +41,33 @@ namespace HuntTheWumpus
         bool m_reportMovement = false;
     };
 
-	class Denizen
-	{
-	public:
-		Denizen(const DenizenIdentifier& identifier, DenizenProperties&& props);
+    class Denizen
+    {
+    public:
+        Denizen(const DenizenIdentifier& identifier, DenizenProperties &&properties, Context& providers);
+        virtual ~Denizen() = default;
 
-		virtual ~Denizen() = default; 
+        // Properties of Thing
+        [[nodiscard]] const DenizenProperties &Properties() const { return m_properties; }
 
-		Denizen(const Denizen&) = delete;
+        [[nodiscard]] const DenizenIdentifier &GetIdentifier() const { return m_identifier; }
 
-		Denizen& operator=(const Denizen&) = delete;
+    	[[nodiscard]] virtual int GetPriority() const = 0;
 
-		Denizen(Denizen&&) noexcept = delete;
+		static int EnterCave(const Cave& cave);
 
-		Denizen& operator=(Denizen&&) noexcept = delete;
-		
-		virtual void ObserveCaveEntrance();
-		
-		virtual void ReportPresence();
-		
-		virtual void EnterCave();
-		
-		virtual void RemoveFromCave();
-		
-		virtual void GetPriority();
+        Denizen(const Denizen&) = delete;
+        Denizen(Denizen&&) = delete;
+        Denizen& operator=(const Denizen&) = delete;
+        Denizen& operator=(Denizen&&) = delete;
 
-		[[nodiscard]] const DenizenProperties& Properties() const;
+    protected:
 
-		[[nodiscard]] const DenizenIdentifier& GetIdentifier() const;
+        DenizenIdentifier m_identifier;
+        DenizenProperties m_properties;
 
-	private:
-
-		DenizenIdentifier m_denizen_identifier_;
-
-		DenizenProperties m_denizen_properties_;
-	};
+        Context& m_providers;
+    };
 
     std::ostream& operator<<(std::ostream& out, const Category& value);
 }

@@ -1,30 +1,20 @@
 ﻿#pragma once
 
-#include <memory>
-
 #include "Denizen.h"
 
 namespace HuntTheWumpus
 {
-	class Bat : public Denizen
-	{
-	public:
-		explicit Bat(const int i);
+    class Bat final : public Denizen
+    {
+    public:
+        Bat(int batInstance, Context& providers);
+        ~Bat() override = default;
 
-		~Bat() override = default;
-
-		Bat(const Bat& src) = delete;
-
-		Bat& operator=(const Bat& src) = delete;
-
-		Bat(Bat&& src) noexcept = delete;
-
-		Bat& operator=(Bat&& src) noexcept = delete;
-
-		void ObserveCaveEntrance() override;
-
-		void ReportPresence() override;
-
-		void GetPriority() override;
-	};
+    	[[nodiscard]] int GetPriority() const override;
+    	
+        Bat(const Bat &) = delete;
+        Bat(Bat &&) = delete;
+        Bat &operator=(const Bat &) = delete;
+        Bat &operator=(Bat &&) = delete;
+    };
 }

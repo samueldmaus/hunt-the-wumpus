@@ -2,47 +2,36 @@
 
 #include "Hunter.h"
 
+#include "Arrow.h"
+
+#include "TestHelperTestEnvironment.h"
+
 namespace TestHuntTheWumpus
 {
-	TEST(HunterSuite, Hunter_HasProperAttributes)
-	{
-		const HuntTheWumpus::Hunter hunter;
+    TEST(HunterSuite, Hunter_HasProperAttributes)
+    {
+        TestEnvironment env;
 
-		const auto& properties = hunter.Properties();
+        const HuntTheWumpus::Hunter hunter(env.m_context);
 
-		CHECK(properties.m_carryableByBats);
-		CHECK(properties.m_isEdible);
-		CHECK(properties.m_reportMovement);
-		CHECK(!properties.m_fatalToHunter);
-		CHECK(!properties.m_fatalToWumpus);
+        const auto &properties = hunter.Properties();
 
-		const auto& id = hunter.GetIdentifier();
+        CHECK(properties.m_carryableByBats);
+        CHECK(properties.m_isEdible);
+        CHECK(properties.m_reportMovement);
+        CHECK(!properties.m_fatalToHunter);
+        CHECK(!properties.m_fatalToWumpus);
 
-		CHECK_EQUAL(HuntTheWumpus::Category::Hunter, id.m_category);
-		CHECK_EQUAL(0, id.m_instance);
-	}
+        const auto& id = hunter.GetIdentifier();
 
-	TEST(HunterSuite, Hunter_Hashing_UniqueHashes)
-	{
-		const HuntTheWumpus::Hunter hunter;
+        CHECK_EQUAL(HuntTheWumpus::Category::Hunter, id.m_category);
+    }
 
-		const HuntTheWumpus::Hunter hunterExtra;
+	TEST(HunterSuite, Hunter_GetPriority)
+    {
+		TestEnvironment env;
 
-		const HuntTheWumpus::DenizenIdentifierHasher hasher;
-
-		const auto hash1 = hasher(hunter.GetIdentifier());
-		const auto hash2 = hasher(hunterExtra.GetIdentifier());
-		
-		CHECK_EQUAL(hash1, hash2);
-	}
-
-	TEST(HunterSuite, Hunter_Comparison_ProperSorting)
-	{
-		const HuntTheWumpus::Hunter hunter;
-
-		const HuntTheWumpus::Hunter hunterExtra;
-
-
-		CHECK(hunter.GetIdentifier() == hunterExtra.GetIdentifier());
-	}
+        const HuntTheWumpus::Hunter hunter(env.m_context);
+    	CHECK_EQUAL(4, hunter.GetPriority());
+    }
 }

@@ -92,6 +92,9 @@
     <ClCompile Include="TestArrow.cpp" />
     <ClCompile Include="TestBat.cpp" />
     <ClCompile Include="TestDenizen.cpp" />
+    <ClCompile Include="TestDungeon.cpp" />
+    <ClCompile Include="TestHelperRandomProvider.h" />
+    <ClCompile Include="TestHelperTestEnvironment.cpp" />
     <ClCompile Include="TestHunter.cpp" />
     <ClCompile Include="TestPit.cpp" />
     <ClCompile Include="TestWumpus.cpp" />
@@ -104,6 +107,10 @@
     <ProjectReference Include="..\HuntTheWumpusLib\HuntTheWumpusLib.vcxproj">
       <Project>{0997d82d-fbb1-4700-9264-98ef703979e3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestHelperDungeon.h" />
+    <ClInclude Include="TestHelperTestEnvironment.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

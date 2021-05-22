@@ -4,26 +4,17 @@
 
 namespace HuntTheWumpus
 {
-	class Pit : public Denizen
-	{
-	public:
-		explicit Pit(const int i);
+    class Pit final : public Denizen
+    {
+    public:
+        Pit(int pitInstance, Context& providers);
+        ~Pit() override = default;
 
-		~Pit() override = default;
+    	[[nodiscard]] int GetPriority() const override;
 
-		Pit(const Pit& src) = delete;
-
-		Pit& operator=(const Pit& src) = delete;
-
-		Pit(Pit&& src) noexcept = delete;
-
-		Pit& operator=(Pit&& src) noexcept = delete;
-
-		void ObserveCaveEntrance() override;
-
-		void ReportPresence() override;
-
-		void GetPriority() override;
-
-	};
+        Pit(const Pit&) = delete;
+        Pit(Pit&&) = delete;
+        Pit& operator=(const Pit&) = delete;
+        Pit& operator=(Pit&&) = delete;
+    };
 }
