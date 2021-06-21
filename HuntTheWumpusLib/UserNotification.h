@@ -42,7 +42,7 @@ namespace HuntTheWumpus
         void Notify(Notification category, const std::vector<int>& arg) const;
 
         UserNotification(const UserNotification&) = default;
-        UserNotification(UserNotification&&) = default;
+        UserNotification(UserNotification&&) noexcept = default;
         UserNotification& operator=(const UserNotification&) = default;
         UserNotification& operator=(UserNotification&&) = default;
 
@@ -52,3 +52,4 @@ namespace HuntTheWumpus
 
         std::unordered_map<Notification, CallbackData> m_callbacks;
     };
+}

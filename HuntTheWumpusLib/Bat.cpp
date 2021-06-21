@@ -45,6 +45,7 @@ namespace HuntTheWumpus
     {
         m_providers.m_notification.Notify(UserNotification::Notification::ObserveBat);
     }
+	
     int Bat::GetPriority() const
     {
         return 5;

@@ -24,7 +24,7 @@ namespace HuntTheWumpus
         int m_instance;
 
         bool operator==(const DenizenIdentifier &other) const;
-        std::strong_ordering operator <=>(const DenizenIdentifier &other) const;
+        std::strong_ordering operator<=>(const DenizenIdentifier &other) const;
     };
 
     struct DenizenIdentifierHasher
