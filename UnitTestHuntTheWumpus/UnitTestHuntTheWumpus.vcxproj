@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestHelperDungeon.h" />
+    <ClInclude Include="TestHelperGameState.h" />
     <ClInclude Include="TestHelperTestEnvironment.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

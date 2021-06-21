@@ -15,7 +15,23 @@ namespace TestHuntTheWumpus
             return m_emptyCave;
         }
 
+        void Move(const HuntTheWumpus::DenizenIdentifier& identifier, const int destinationCave) override
+        {
+            m_thingToMove = identifier;
+            m_requestedDestination = destinationCave;
+        }
+
+        void MoveDenizenRandomly(const HuntTheWumpus::DenizenIdentifier& identifier) override
+        {
+            m_moveDenizenRandomlyTriggered = true;
+            m_thingToMove = identifier;
+        }
+
         std::shared_ptr<HuntTheWumpus::Cave> m_emptyCave = {};
+
+        int m_requestedDestination = -1;
+        HuntTheWumpus::DenizenIdentifier m_thingToMove = {};
+        bool m_moveDenizenRandomlyTriggered = false;
 
         TestDungeon(const TestDungeon&) = delete;
         TestDungeon(TestDungeon&&) = delete;
