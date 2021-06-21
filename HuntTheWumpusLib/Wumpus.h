@@ -7,11 +7,14 @@ namespace HuntTheWumpus
     class Wumpus final : public Denizen
     {
     public:
-        Wumpus(int instance, Context& providers);
+        explicit Wumpus(int instance, Context& providers);
         ~Wumpus() override = default;
 
-        [[nodiscard]] int GetPriority() const override;
-    	
+        int GetPriority() const override;
+
+        bool ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger) override;
+        void ReportPresence() const override;
+
         Wumpus(const Wumpus&) = delete;
         Wumpus(Wumpus&&) = delete;
         Wumpus& operator=(const Wumpus&) = delete;

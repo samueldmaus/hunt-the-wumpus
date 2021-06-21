@@ -6,11 +6,15 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include <ostream>
 
 namespace HuntTheWumpus
 {
     class IDungeon;
+
+    struct CompareThings
+    {
+        bool operator()(const std::shared_ptr<Denizen> &thing1, const std::shared_ptr<Denizen> &thing2) const;
+    };
 
     class Cave
     {
@@ -18,22 +22,22 @@ namespace HuntTheWumpus
         explicit Cave(int caveId, IDungeon &dungeon);
         ~Cave() = default;
 
-        [[nodiscard]] bool HasDenizens() const { return !m_denizens.empty(); }
-        [[nodiscard]] bool HasDenizen(const DenizenIdentifier &identifier) const;
+        void ConnectTo(const std::shared_ptr<Cave> &destination);
 
-        [[nodiscard]] IDungeon &GetDungeon() const { return m_dungeon; }
+        const std::weak_ptr<Cave> &GetConnectedCave(int caveId);
 
-    	[[nodiscard]] int GetCaveId() const;
+        int GetCaveId() const { return m_caveId; }
 
-    	void ConnectTo(const std::shared_ptr<Cave>& connect_cave);
+        std::vector<int> GetConnectedIds() const;
 
-    	[[nodiscard]] std::vector<int> GetConnectedIds() const;
+        void AddDenizen(const std::shared_ptr<Denizen> &newDenizen, bool observeEntrance);
+        void RemoveDenizen(const DenizenIdentifier &identifier);
+        void ReportDenizens() const;
 
-    	std::weak_ptr<Cave> GetConnectedCave(int caveId);
+        bool HasDenizens() const { return !m_denizens.empty(); }
+        bool HasDenizen(const DenizenIdentifier &identifier) const;
 
-    	void AddDenizen(const std::shared_ptr<Denizen>& denizen);
-
-    	void ReportDenizens(std::ostream& os);
+        IDungeon &GetDungeon() const { return m_dungeon; }
 
         Cave() = delete;
         Cave(const Cave&) = delete;
@@ -42,12 +46,10 @@ namespace HuntTheWumpus
         Cave& operator=(Cave&&) = delete;
 
     private:
-    	int m_caveId;
-    	
+        int m_caveId;
         IDungeon &m_dungeon;
 
-    	std::set<std::shared_ptr<Denizen>, decltype([](const auto& a, const auto& b){ return a->GetPriority() < b->GetPriority(); })> m_denizens;
-
-    	std::unordered_map<int, std::weak_ptr<Cave>> cave_tunnels;
+        std::set<std::shared_ptr<Denizen>, CompareThings> m_denizens;
+        std::unordered_map<int, std::weak_ptr<Cave>> m_tunnels;
     };
 }

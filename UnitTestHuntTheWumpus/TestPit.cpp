@@ -22,16 +22,35 @@ namespace TestHuntTheWumpus
         CHECK(properties.m_fatalToHunter);
         CHECK(!properties.m_fatalToWumpus);
 
+        CHECK_EQUAL(4, pit.GetPriority());
+
         const auto& id = pit.GetIdentifier();
 
         CHECK_EQUAL(HuntTheWumpus::Category::Pit, id.m_category);
     }
 
-	TEST(PitSuite, Pit_GetPriority)
+    TEST(PitSuite, Pit_BadForHunter)
     {
-		TestEnvironment env;
+        TestEnvironment env;
 
-        const HuntTheWumpus::Pit pit(0, env.m_context);
-    	CHECK_EQUAL(2, pit.GetPriority());
+        auto hunterFellCalled = false;
+
+        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::PitTriggered, [&]()
+        {
+            hunterFellCalled = true;
+        });
+
+        HuntTheWumpus::Pit pit(0, env.m_context);
+
+        const auto hunter = std::make_shared<HuntTheWumpus::Hunter>(env.m_context);
+
+        // This should return true that there was an action taken.
+        CHECK(pit.ObserveCaveEntrance(hunter));
+
+        CHECK(hunterFellCalled);
+
+        // Show that a state-change happened to a "lost" result.
+        CHECK(env.m_state.m_gameOverCalled);
+        CHECK(!env.m_state.m_gameOverResult);
     }
 }

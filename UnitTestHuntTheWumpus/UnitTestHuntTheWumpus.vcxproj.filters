@@ -45,12 +45,18 @@
     <ClCompile Include="TestHelperTestEnvironment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestCave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestHelperDungeon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestHelperTestEnvironment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestHelperGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

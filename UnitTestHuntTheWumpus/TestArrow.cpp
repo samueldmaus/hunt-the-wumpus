@@ -20,6 +20,8 @@ namespace TestHuntTheWumpus
         CHECK(properties.m_fatalToHunter);
         CHECK(properties.m_fatalToWumpus);
 
+        CHECK_EQUAL(2, arrow.GetPriority());
+
         const auto& id = arrow.GetIdentifier();
 
         CHECK_EQUAL(HuntTheWumpus::Category::Arrow, id.m_category);

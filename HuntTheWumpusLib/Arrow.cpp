@@ -9,6 +9,6 @@ namespace HuntTheWumpus
 	
     int Arrow::GetPriority() const
     {
-        return 5;
+        return 2;
     }
 }

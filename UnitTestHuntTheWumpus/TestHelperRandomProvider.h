@@ -42,4 +42,3 @@ namespace TestHuntTheWumpus
         TestRandomProvider& operator=(TestRandomProvider&&) = delete;
     };
 }
-

@@ -24,7 +24,7 @@ namespace HuntTheWumpus
         int m_instance;
 
         bool operator==(const DenizenIdentifier &other) const;
-        std::strong_ordering operator <=>(const DenizenIdentifier &other) const;
+        std::strong_ordering operator<=>(const DenizenIdentifier &other) const;
     };
 
     struct DenizenIdentifierHasher
@@ -47,14 +47,21 @@ namespace HuntTheWumpus
         Denizen(const DenizenIdentifier& identifier, DenizenProperties &&properties, Context& providers);
         virtual ~Denizen() = default;
 
+        // Returns true if the observation triggered a behavior.
+        virtual bool ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger);
+        virtual void ReportPresence() const;
+
         // Properties of Thing
-        [[nodiscard]] const DenizenProperties &Properties() const { return m_properties; }
+        const DenizenProperties &Properties() const { return m_properties; }
 
-        [[nodiscard]] const DenizenIdentifier &GetIdentifier() const { return m_identifier; }
+        virtual void EnterCave(const std::shared_ptr<Cave>& cave);
+        void RemoveFromCave();
 
-    	[[nodiscard]] virtual int GetPriority() const = 0;
+        const std::weak_ptr<Cave> &GetCurrentCave() const { return m_cave; }
 
-		static int EnterCave(const Cave& cave);
+        virtual int GetPriority() const;
+
+        const DenizenIdentifier &GetIdentifier() const { return m_identifier; }
 
         Denizen(const Denizen&) = delete;
         Denizen(Denizen&&) = delete;
@@ -67,7 +74,9 @@ namespace HuntTheWumpus
         DenizenProperties m_properties;
 
         Context& m_providers;
+        std::weak_ptr<Cave> m_cave;
     };
 
     std::ostream& operator<<(std::ostream& out, const Category& value);
+    std::ostream& operator<<(std::ostream& out, const DenizenIdentifier &value);
 }
