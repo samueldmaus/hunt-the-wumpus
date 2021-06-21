@@ -1,61 +1,91 @@
 ﻿#include "Cave.h"
 #include "Denizen.h"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <algorithm>
+
 namespace HuntTheWumpus
 {
+    bool CompareThings::operator()(const std::shared_ptr<Denizen>& thing1, const std::shared_ptr<Denizen>& thing2) const
+    {
+        return thing1->GetPriority() > thing2->GetPriority();
+    }
+
     Cave::Cave(const int caveId, IDungeon& dungeon)
         : m_caveId(caveId),
         m_dungeon(dungeon)
     {
     }
 
-    bool Cave::HasDenizen(const DenizenIdentifier &identifier) const
+    void Cave::ConnectTo(const std::shared_ptr<Cave>& destination)
     {
-        const auto found = std::find_if(m_denizens.begin(), m_denizens.end(), [&](const std::shared_ptr<Denizen> &denizen)
+        m_tunnels.emplace(destination->GetCaveId(), destination);
+    }
+
+    const std::weak_ptr<Cave>& Cave::GetConnectedCave(const int caveId)
+    {
+        return m_tunnels.at(caveId);
+    }
+
+    void Cave::AddDenizen(const std::shared_ptr<Denizen>& newDenizen, const bool observeEntrance)
+    {
+        m_denizens.emplace(newDenizen);
+
+        if (observeEntrance)
         {
-            return denizen->GetIdentifier().m_category == identifier.m_category;
-        });
+            auto action = false;
 
-        return found != m_denizens.end();
-    }
-	
-    int Cave::GetCaveId() const
-    {
-        return m_caveId;
+            for (auto&& denizen : m_denizens)
+            {
+                action = denizen->ObserveCaveEntrance(newDenizen);
+
+                if (action)
+                {
+                    // Stop if that denizen affected things.
+                    break;
+                }
+            }
+
+            if(!action && newDenizen->Properties().m_reportMovement)
+            {
+                for(auto &&[caveId, cave] : m_tunnels)
+                {
+                    cave.lock()->ReportDenizens();
+                }
+            }
+        }
     }
 
-    void Cave::ConnectTo(const std::shared_ptr<Cave>& connect_cave)
+    void Cave::RemoveDenizen(const DenizenIdentifier& identifier)
     {
-    	cave_tunnels.emplace(connect_cave->GetCaveId(), std::weak_ptr<Cave>(connect_cave));
+        m_denizens.erase( std::ranges::find_if(m_denizens, [&](const auto& thing) { return (thing->GetIdentifier() <=> identifier) == std::strong_ordering::equal; }) );
     }
-	
+
+    void Cave::ReportDenizens() const
+    {
+        for(auto &&denizen : m_denizens)
+        {
+            denizen->ReportPresence();
+        }
+    }
+
     std::vector<int> Cave::GetConnectedIds() const
     {
-    	std::vector<int> connected_caves;
-        for(auto&& [key, value] : cave_tunnels)
+        std::vector<int> caveIds;
+
+        for (auto&& [caveId, cave] : m_tunnels)
         {
-	        connected_caves.push_back(key);
+            caveIds.emplace_back(caveId);
         }
-    	return connected_caves;
+
+        return caveIds;
     }
 
-	std::weak_ptr<Cave> Cave::GetConnectedCave(int caveId)
+    bool Cave::HasDenizen(const DenizenIdentifier &identifier) const
     {
-    	return cave_tunnels.at(caveId);
-    }
-	
-    void Cave::AddDenizen(const std::shared_ptr<Denizen>& denizen)
-    {
-    	m_denizens.insert(denizen);
-    	denizen->EnterCave(*this);
-    }
-	
-    void Cave::ReportDenizens(std::ostream& os)
-    {
-    	for(const auto& denizen : m_denizens)
-    	{
-    		os << denizen->GetIdentifier().m_category;
-    	}
-    	
+        return std::ranges::find_if(m_denizens, [&](const auto &denizen)
+        {
+            return denizen->GetIdentifier().m_category == identifier.m_category;
+        }) != m_denizens.end();
     }
 }

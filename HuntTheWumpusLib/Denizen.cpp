@@ -4,8 +4,6 @@
 #include <functional>
 #include <iostream>
 
-#include "Cave.h"
-
 namespace HuntTheWumpus
 {
     Denizen::Denizen(const DenizenIdentifier& identifier, DenizenProperties&& properties, Context& providers)
@@ -15,10 +13,31 @@ namespace HuntTheWumpus
     {
     }
 
-    int Denizen::EnterCave(const Cave& cave)
+    int Denizen::GetPriority() const
     {
-        return cave.GetCaveId();
+        return 0;
     }
+
+    bool Denizen::ObserveCaveEntrance(const std::shared_ptr<Denizen>&)
+    {
+        // Default behavior: nothing.
+        return false;
+    }
+
+    void Denizen::ReportPresence() const
+    {
+    }
+
+    void Denizen::EnterCave(const std::shared_ptr<Cave>& cave)
+    {
+        m_cave = cave;
+    }
+
+    void Denizen::RemoveFromCave()
+    {
+        m_cave.reset();
+    }
+
 
     bool DenizenIdentifier::operator==(const DenizenIdentifier& other) const
     {
@@ -74,6 +93,12 @@ namespace HuntTheWumpus
         };
 
         out << s_valueMap[value];
+        return out;
+    }
+
+    std::ostream &operator<<(std::ostream &out, const DenizenIdentifier &value)
+    {
+        out << "{" << value.m_category << "," << value.m_instance << "}";
         return out;
     }
 }

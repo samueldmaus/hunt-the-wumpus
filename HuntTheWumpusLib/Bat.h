@@ -10,11 +10,14 @@ namespace HuntTheWumpus
         Bat(int batInstance, Context& providers);
         ~Bat() override = default;
 
-    	[[nodiscard]] int GetPriority() const override;
-    	
-        Bat(const Bat &) = delete;
-        Bat(Bat &&) = delete;
-        Bat &operator=(const Bat &) = delete;
-        Bat &operator=(Bat &&) = delete;
+        bool ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger) override;
+        void ReportPresence() const override;
+
+        [[nodiscard]] int GetPriority() const override;
+
+        Bat(const Bat&) = delete;
+        Bat(Bat&&) = delete;
+        Bat& operator=(const Bat&) = delete;
+        Bat& operator=(Bat&&) = delete;
     };
 }
