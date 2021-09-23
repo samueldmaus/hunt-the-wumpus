@@ -7,29 +7,29 @@
 
 namespace HuntTheWumpus
 {
-    class Arrow;
+	class Arrow;
 
-    class Hunter final : public Denizen
-    {
-    public:
-        explicit Hunter(Context& providers);
-        ~Hunter() override = default;
+	class Hunter final : public Denizen
+	{
+	public:
+		explicit Hunter(Context& providers);
+		~Hunter() override = default;
 
-        [[nodiscard]] int GetPriority() const override;
+		int GetPriority() const override { return 1; }
 
-        void EnterCave(const std::shared_ptr<Cave>& cave) override;
-        bool ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger) override;
+		void EnterCave(const std::shared_ptr<Cave>& cave) override;
+		bool ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger) override;
 
-        std::shared_ptr<Arrow> GetArrow();
+		std::shared_ptr<Arrow> GetArrow();
 
-        bool OutOfArrows() const { return m_arrows.empty(); }
+		bool OutOfArrows() const { return m_arrows.empty(); }
 
-        Hunter(const Hunter&) = delete;
-        Hunter(Hunter&&) = delete;
-        Hunter& operator=(const Hunter&) = delete;
-        Hunter& operator=(Hunter&&) = delete;
+		Hunter(const Hunter&) = delete;
+		Hunter(Hunter&&) = delete;
+		Hunter& operator=(const Hunter&) = delete;
+		Hunter& operator=(Hunter&&) = delete;
 
-    private:
-        std::vector<std::shared_ptr<Arrow>> m_arrows;
-    };
+	private:
+		std::vector<std::shared_ptr<Arrow>> m_arrows;
+	};
 }

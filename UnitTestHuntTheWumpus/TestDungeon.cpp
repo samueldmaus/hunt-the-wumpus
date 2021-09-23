@@ -9,230 +9,328 @@
 
 namespace TestHuntTheWumpus
 {
-    TEST(DungeonSuite, TestDungeonInitialize_DoubleRequest_Ignored)
-    {
-        TestEnvironment env;
+	TEST(DungeonSuite, TestDungeonInitialize_DoubleRequest_Ignored)
+	{
+		TestEnvironment env;
 
-        // The hunter will enter the cave, so we need some defaults.
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::CaveEntered, [](const int) {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
+		// The hunter will enter the cave, so we need some defaults.
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::CaveEntered, [](const int) {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
 
-        // Show that things are in the proper caves.
-        auto batReported = false;
-        auto pitReported = false;
-        auto wumpusReported = false;
+		// Show that things are in the proper caves.
+		auto batReported = false;
+		auto pitReported = false;
+		auto wumpusReported = false;
 
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveBat, [&] { batReported = true; });
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObservePit, [&] { pitReported = true; });
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveWumpus, [&] { wumpusReported = true; });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveBat, [&] { batReported = true; });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObservePit, [&] { pitReported = true; });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveWumpus, [&] { wumpusReported = true; });
 
-        // This will ask for 8 random cave ids because we're
-        // going to try to set the 2nd bat into cave #1 again,
-        // and try to put the Hunter into an occupied cave.
-        env.m_provider.SetCaveSequence({ 1, 1, 2, 3, 4, 5, 1, 6 });
+		// This will ask for 8 random cave ids because we're
+		// going to try to set the 2nd bat into cave #1 again,
+		// and try to put the Hunter into an occupied cave.
+		env.m_provider.SetCaveSequence({ 1, 1, 2, 3, 4, 5, 1, 6 });
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        // Verify Bats uniquely distributed
-        const auto cave1 = dungeon.FindCave(1);
-        const auto cave2 = dungeon.FindCave(2);
-        CHECK(cave1->HasDenizen({HuntTheWumpus::Category::Bat, 0}));
-        CHECK(cave2->HasDenizen({HuntTheWumpus::Category::Bat, 1}));
+		// Verify Bats uniquely distributed
+		const auto cave1 = dungeon.FindCave(1);
+		const auto cave2 = dungeon.FindCave(2);
+		CHECK(cave1->HasDenizen({ HuntTheWumpus::Category::Bat, 0 }));
+		CHECK(cave2->HasDenizen({ HuntTheWumpus::Category::Bat, 1 }));
 
-        // Verify Hunter in separate cave.
-        const auto cave6 = dungeon.FindCave(6);
-        CHECK(cave6->HasDenizen({HuntTheWumpus::Category::Hunter, 0}));
+		// Verify Hunter in separate cave.
+		const auto cave6 = dungeon.FindCave(6);
+		CHECK(cave6->HasDenizen({ HuntTheWumpus::Category::Hunter, 0 }));
 
-             // Verify observations.
-        struct TestExpectation
-        {
-            int m_caveId;
-            bool m_batReported;
-            bool m_pitReported;
-            bool m_wumpusReported;
-        };
+		// Verify observations.
+		struct TestExpectation
+		{
+			int m_caveId;
+			bool m_batReported;
+			bool m_pitReported;
+			bool m_wumpusReported;
+		};
 
-        TestExpectation tests[] =
-        {
-            { 1, true, false, false },  // Bat
-            { 2, true, false, false },  // Bat
-            { 3, false, false, true },  // Wumpus
-            { 4, false, true, false },  // Pit
-            { 5, false, true, false },  // Pit
-            { 6, false, false, false }  // Hunter
-        };
+		TestExpectation tests[] =
+		{
+			{ 1, true, false, false },  // Bat
+			{ 2, true, false, false },  // Bat
+			{ 3, false, false, true },  // Wumpus
+			{ 4, false, true, false },  // Pit
+			{ 5, false, true, false },  // Pit
+			{ 6, false, false, false }  // Hunter
+		};
 
-        for (auto&& test : tests)
-        {
-            batReported = false;
-            pitReported = false;
-            wumpusReported = false;
+		for (auto&& test : tests)
+		{
+			batReported = false;
+			pitReported = false;
+			wumpusReported = false;
 
-            const auto& cave = dungeon.FindCave(test.m_caveId);
+			const auto& cave = dungeon.FindCave(test.m_caveId);
 
-            cave->ReportDenizens();
+			cave->ReportDenizens();
 
-            CHECK_EQUAL(test.m_batReported, batReported);
-            CHECK_EQUAL(test.m_pitReported, pitReported);
-            CHECK_EQUAL(test.m_wumpusReported, wumpusReported);
-        }
-    }
+			CHECK_EQUAL(test.m_batReported, batReported);
+			CHECK_EQUAL(test.m_pitReported, pitReported);
+			CHECK_EQUAL(test.m_wumpusReported, wumpusReported);
+		}
+	}
 
-    TEST(DungeonSuite, Dungeon_MoveRequest_ReportsIllegal)
-    {
-        TestEnvironment env;
+	TEST(DungeonSuite, Dungeon_MoveRequest_ReportsIllegal)
+	{
+		TestEnvironment env;
 
-        // This will ask for 6 random cave ids.
-        env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
+		// This will ask for 6 random cave ids.
+		env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        auto illegalMoveReported = false;
-        auto caveId = 0;
+		auto illegalMoveReported = false;
+		auto caveId = 0;
 
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ReportIllegalMove, [&](const int destCave) {
-            illegalMoveReported = true;
-            caveId = destCave;
-        });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ReportIllegalMove, [&](const int destCave) {
+			illegalMoveReported = true;
+			caveId = destCave;
+			});
 
-        // We know the Hunter is in cave 5, which doesn't connect to 20.
-        dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 20 });
+		// We know the Hunter is in cave 5, which doesn't connect to 20.
+		dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 20 });
 
-        CHECK(illegalMoveReported);
-        CHECK_EQUAL(20, caveId);
-    }
+		CHECK(illegalMoveReported);
+		CHECK_EQUAL(20, caveId);
+	}
 
-    TEST(DungeonSuite, Dungeon_MoveRequest_LegalMoveIsProper)
-    {
-        TestEnvironment env;
+	TEST(DungeonSuite, Dungeon_MoveRequest_LegalMoveIsProper)
+	{
+		TestEnvironment env;
 
-        // This will ask for 6 random cave ids.
-        env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
+		// This will ask for 6 random cave ids.
+		env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
 
-        auto caveEnteredCalled = false;
-        auto caveId = 0;
+		auto caveEnteredCalled = false;
+		auto caveId = 0;
 
-        // The hunter will enter the cave, so we need some defaults.
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::CaveEntered, [&](const int destCave)
-        {
-            caveEnteredCalled = true;
-            caveId = destCave;
-        });
+		// The hunter will enter the cave, so we need some defaults.
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::CaveEntered, [&](const int destCave)
+			{
+				caveEnteredCalled = true;
+				caveId = destCave;
+			});
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        // We know the Hunter is in cave 6, which connects to 15.
-        dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 15 });
+		// We know the Hunter is in cave 6, which connects to 15.
+		dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 15 });
 
-        CHECK(caveEnteredCalled);
-        CHECK_EQUAL(15, caveId);
-    }
+		CHECK(caveEnteredCalled);
+		CHECK_EQUAL(15, caveId);
+	}
 
-    TEST(DungeonSuite, Dungeon_ShootRequest_MissingTheWumpusReportsMiss)
-    {
-        TestEnvironment env;
+	TEST(DungeonSuite, Dungeon_ShootRequest_MissingTheWumpusReportsMiss)
+	{
+		TestEnvironment env;
 
-        // This will ask for 6 random cave ids.
-        env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
+		// This will ask for 6 random cave ids.
+		env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
 
-        auto missedCalled = false;
-        auto wumpusAwokenCalled = false;
+		auto missedCalled = false;
+		auto wumpusAwokenCalled = false;
 
-        // The hunter will enter the cave, so we need some defaults.
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveMiss, [&]() { missedCalled = true; });
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusAwoken, [&] { wumpusAwokenCalled = true; });
+		// The hunter will enter the cave, so we need some defaults.
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveMiss, [&]() { missedCalled = true; });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusAwoken, [&] { wumpusAwokenCalled = true; });
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        // Make sure the game is playing.
-        env.m_state.m_isPlayingResult = true;
+		// Make sure the game is playing.
+		env.m_state.m_isPlayingResult = true;
 
-        // We know the Hunter is in cave 6, which connects to 5, 7, and 15.
-        // Request none of those, so that we a) randomly move, and b) miss.
-        dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
+		// We know the Hunter is in cave 6, which connects to 5, 7, and 15.
+		// Request none of those, so that we a) randomly move, and b) miss.
+		dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
 
-        // Show that missing the Wumpus keeps the game going.
-        CHECK(env.m_state.m_isPlayingResult);
+		// Show that missing the Wumpus keeps the game going.
+		CHECK(env.m_state.m_isPlayingResult);
 
-        // And that the Wumpus moved to a new cave. We know that the
-        // Wumpus startred in cave 3, and the random move cave was tunnel #0.
+		// And that the Wumpus moved to a new cave. We know that the
+		// Wumpus startred in cave 3, and the random move cave was tunnel #0.
 	// However, we don't know the order of the tunnel identifiers,
 	// so we have to look it up be cause it's stored in an unordered map,
 	// and the ordering out of GetConnectedIds() is undefined.
-	const auto cave3 = dungeon.FindCave(3);
-	const auto connectedCaves = cave3->GetConnectedIds();
-	const auto newCaveId = connectedCaves.front();
-	
-        auto cave = dungeon.FindCave(newCaveId);
+		const auto cave3 = dungeon.FindCave(3);
+		const auto connectedCaves = cave3->GetConnectedIds();
+		const auto newCaveId = connectedCaves.front();
 
-        CHECK(cave->HasDenizen({ HuntTheWumpus::Category::Wumpus , 0 }));
+		auto cave = dungeon.FindCave(newCaveId);
 
-        CHECK(missedCalled);
-        CHECK(wumpusAwokenCalled);
-    }
+		CHECK(cave->HasDenizen({ HuntTheWumpus::Category::Wumpus , 0 }));
 
-    TEST(DungeonSuite, Dungeon_ShootingAll_GameOver)
-    {
-        TestEnvironment env;
+		CHECK(missedCalled);
+		CHECK(wumpusAwokenCalled);
+	}
 
-        // This will ask for 6 random cave ids.
-        env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
+	TEST(DungeonSuite, Dungeon_ShootingAll_GameOver)
+	{
+		TestEnvironment env;
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		// This will ask for 6 random cave ids.
+		env.m_provider.SetCaveSequence({ 1, 2, 3, 4, 5, 6 });
 
-        // Make sure the game is playing.
-        env.m_state.m_isPlayingResult = true;
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        auto outOfArrowsCalled = false;
+		// Make sure the game is playing.
+		env.m_state.m_isPlayingResult = true;
 
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveMiss, []() {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusAwoken, [] {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveOutOfArrows, [&]() { outOfArrowsCalled = true; });
+		auto outOfArrowsCalled = false;
 
-        for (auto idx = 0; idx < 4; ++idx)
-        {
-            // We know the Hunter is in cave 6, which connects to 5, 7, and 15.
-            // Request none of those, so that we a) randomly move, and b) miss.
-            dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
-            CHECK(env.m_state.m_isPlayingResult);
-        }
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveMiss, []() {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusAwoken, [] {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::ObserveOutOfArrows, [&]() { outOfArrowsCalled = true; });
 
-        // Show that shooting one more makes the game over.
-        dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
+		for (auto idx = 0; idx < 4; ++idx)
+		{
+			// We know the Hunter is in cave 6, which connects to 5, 7, and 15.
+			// Request none of those, so that we a) randomly move, and b) miss.
+			dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
+			CHECK(env.m_state.m_isPlayingResult);
+		}
 
-        CHECK(outOfArrowsCalled);
-        CHECK(env.m_state.m_gameOverCalled);
-        CHECK(!env.m_state.m_gameOverResult);
-    }
+		// Show that shooting one more makes the game over.
+		dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 16 });
 
-    TEST(DungeonSuite, Dungeon_ShootRequest_HittingTheWumpusReportsGameOver)
-    {
-        TestEnvironment env;
+		CHECK(outOfArrowsCalled);
+		CHECK(env.m_state.m_gameOverCalled);
+		CHECK(!env.m_state.m_gameOverResult);
+	}
 
-        // This will ask for 6 random cave ids. Put the Wumpus
-        // in Cave #15
-        env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
+	TEST(DungeonSuite, Dungeon_ShootRequest_HittingTheWumpusReportsGameOver)
+	{
+		TestEnvironment env;
 
-        HuntTheWumpus::Dungeon dungeon(env.m_context);
+		// This will ask for 6 random cave ids. Put the Wumpus
+		// in Cave #15
+		env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
 
-        // Make sure the game is playing.
-        env.m_state.m_isPlayingResult = true;
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
 
-        auto wumpusShotCalled = false;
+		// Make sure the game is playing.
+		env.m_state.m_isPlayingResult = true;
 
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
-        env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusShot, [&]() { wumpusShotCalled = true; });
+		auto wumpusShotCalled = false;
 
-        // We know the Hunter is in cave 6, which connects to 15.
-        // We've put the Wumpus in 15.
-        dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 15 });
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::NeighboringCaves, [](const std::vector<int>&) {});
+		env.m_notifier.AddCallback(HuntTheWumpus::UserNotification::Notification::WumpusShot, [&]() { wumpusShotCalled = true; });
 
-        // Show that we hit the Wumpus!
-        CHECK(wumpusShotCalled)
-        CHECK(!env.m_state.m_isPlayingResult);
-        CHECK(env.m_state.m_gameOverCalled);
-        CHECK(env.m_state.m_gameOverResult);
-     }
+		// We know the Hunter is in cave 6, which connects to 15.
+		// We've put the Wumpus in 15.
+		dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { 15 });
+
+		// Show that we hit the Wumpus!
+		CHECK(wumpusShotCalled)
+			CHECK(!env.m_state.m_isPlayingResult);
+		CHECK(env.m_state.m_gameOverCalled);
+		CHECK(env.m_state.m_gameOverResult);
+	}
+
+	TEST(DungeonSuite, Dungeon_MissingUserNotification_ThrowsInvalidArgument_WithArgs)
+	{
+		TestEnvironment env;
+
+		// This will ask for 6 random cave ids. Put the Wumpus
+		// in Cave #15
+		env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
+
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
+
+		auto exceptionThrown = false;
+
+		try
+		{
+			// attempt to move to 1 to get user notification of ReportIllegalMove
+			dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 1 });
+		}
+		catch (const std::invalid_argument& e)
+		{
+			exceptionThrown = true;
+		}
+
+		CHECK(exceptionThrown);
+	}
+
+	TEST(DungeonSuite, Dungeon_MissingUserNotification_ThrowsInvalidArgument_WithoutArgs)
+	{
+		TestEnvironment env;
+
+		// This will ask for 6 random cave ids. Put the Wumpus
+		// in Cave #15
+		env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
+
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
+
+		auto exceptionThrown = false;
+
+		try
+		{
+			// move to 5 in attempt to get user notification of PitTriggered
+			dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { 5 });
+		}
+		catch (const std::invalid_argument& e)
+		{
+			exceptionThrown = true;
+		}
+
+		CHECK(exceptionThrown);
+	}
+
+	TEST(DungeonSuite, Dungeon_MissingDestinationCave_Move)
+	{
+		TestEnvironment env;
+
+		// This will ask for 6 random cave ids. Put the Wumpus
+		// in Cave #15
+		env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
+
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
+
+		auto exceptionThrown = false;
+
+		try
+		{
+			dungeon.MakeMove(HuntTheWumpus::DungeonMove::Move, { });
+		}
+		catch (const std::invalid_argument& e)
+		{
+			exceptionThrown = true;
+		}
+
+		CHECK(exceptionThrown);
+	}
+
+	TEST(DungeonSuite, Dungeon_MissingDestinationCave_Shoot)
+	{
+		TestEnvironment env;
+
+		// This will ask for 6 random cave ids. Put the Wumpus
+		// in Cave #15
+		env.m_provider.SetCaveSequence({ 1, 2, 15, 4, 5, 6 });
+
+		HuntTheWumpus::Dungeon dungeon(env.m_context);
+
+		auto exceptionThrown = false;
+
+		try
+		{
+			dungeon.MakeMove(HuntTheWumpus::DungeonMove::Shoot, { });
+		}
+		catch (const std::invalid_argument& e)
+		{
+			exceptionThrown = true;
+		}
+
+		CHECK(exceptionThrown);
+	}
 }

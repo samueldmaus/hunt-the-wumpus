@@ -15,209 +15,217 @@
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include <algorithm>
+#include <iostream>
 
 namespace HuntTheWumpus
 {
-    Dungeon::Dungeon(Context& providers)
-        : m_providers(providers)
-    {
-        Initialize(providers);
-    }
+	Dungeon::Dungeon(Context& providers)
+		: m_providers(providers)
+	{
 
-    void Dungeon::Initialize(Context& providers)
-    {
-        for (auto idx = 1; idx <= 20; ++idx)
-        {
-            m_caves.emplace(idx, std::make_shared<Cave>(idx, *this));
-        }
+		Initialize(providers);
 
-        MakeTunnels();
+	}
 
-        MakeDenizen<Bat>(0);
-        MakeDenizen<Bat>(1);
-        MakeDenizen<Wumpus>(0);
-        MakeDenizen<Pit>(0);
-        MakeDenizen<Pit>(1);
+	void Dungeon::Initialize(Context& providers)
+	{
+		for (auto idx = 1; idx <= 20; ++idx)
+		{
+			m_caves.emplace(idx, std::make_shared<Cave>(idx, *this));
+		}
 
-        // Put the hunter in a random  empty cave.
-        auto hunterPlaced = false;
+		MakeTunnels();
 
-        while(!hunterPlaced)
-        {
-            const auto hunterCave = providers.m_random.MakeRandomCave();
+		MakeDenizen<Bat>(0);
+		MakeDenizen<Bat>(1);
+		MakeDenizen<Wumpus>(0);
+		MakeDenizen<Pit>(0);
+		MakeDenizen<Pit>(1);
 
-            if(m_caves[hunterCave]->HasDenizens())
-            {
-                continue;
-            }
+		// Put the hunter in a random  empty cave.
+		auto hunterPlaced = false;
 
-            AddToCave(std::make_shared<Hunter>(providers), hunterCave, true);
+		while (!hunterPlaced)
+		{
+			const auto hunterCave = providers.m_random.MakeRandomCave();
 
-            hunterPlaced = true;
-        }
-    }
+			if (m_caves[hunterCave]->HasDenizens())
+			{
+				continue;
+			}
 
-    void Dungeon::MakeTunnels()
-    {
-        const std::vector<std::pair<int, std::vector<int> > > tunnelPairs = {
-            { 1, {2, 5, 8} },
-            { 2, {1, 3, 10} },
-            { 3, {2, 4, 12} },
-            { 4, {3, 5, 14} },
-            { 5, {1, 4, 6} },
-            { 6, { 5, 7, 15} },
-            { 7, {6, 8, 17} },
-            { 8, {1, 7, 9} },
-            { 9, {8, 10, 18} },
-            { 10, {2, 9, 11} },
-            { 11, {10, 12, 19} },
-            { 12, {3, 11, 13} },
-            { 13, {12, 14, 20 }  },
-            { 14, {4, 13, 15} },
-            { 15, {6, 14, 16} },
-            { 16, {15, 17, 20} },
-            { 17, {7, 16, 18} },
-            { 18, {9, 17, 19} },
-            { 19, {11, 18, 20} },
-            { 20, {13, 16, 19} }
-        };
+			AddToCave(std::make_shared<Hunter>(providers), hunterCave, true);
 
-        for (auto&& [caveId, neighborIds] : tunnelPairs)
-        {
-            const auto cave = m_caves.at(caveId);
+			hunterPlaced = true;
+		}
+	}
 
-            for (auto&& neighborId : neighborIds)
-            {
-                const auto neighbor = m_caves.at(neighborId);
-                cave->ConnectTo(neighbor);
-            }
-        }
-    }
+	void Dungeon::MakeTunnels()
+	{
+		const std::vector<std::pair<int, std::vector<int> > > tunnelPairs = {
+			{ 1, {2, 5, 8} },
+			{ 2, {1, 3, 10} },
+			{ 3, {2, 4, 12} },
+			{ 4, {3, 5, 14} },
+			{ 5, {1, 4, 6} },
+			{ 6, { 5, 7, 15} },
+			{ 7, {6, 8, 17} },
+			{ 8, {1, 7, 9} },
+			{ 9, {8, 10, 18} },
+			{ 10, {2, 9, 11} },
+			{ 11, {10, 12, 19} },
+			{ 12, {3, 11, 13} },
+			{ 13, {12, 14, 20 }  },
+			{ 14, {4, 13, 15} },
+			{ 15, {6, 14, 16} },
+			{ 16, {15, 17, 20} },
+			{ 17, {7, 16, 18} },
+			{ 18, {9, 17, 19} },
+			{ 19, {11, 18, 20} },
+			{ 20, {13, 16, 19} }
+		};
 
-    const std::shared_ptr<Cave>& Dungeon::FindCave(const int caveId)
-    {
-        const auto caveItr = m_caves.find(caveId);
-        return caveItr->second;
-    }
+		for (auto&& [caveId, neighborIds] : tunnelPairs)
+		{
+			const auto cave = m_caves.at(caveId);
 
-    void Dungeon::AddToCave(const std::shared_ptr<Denizen>& denizen, const int caveId, const bool observeEntrance)
-    {
-        m_caveDenizens.emplace(denizen->GetIdentifier(), denizen);
+			for (auto&& neighborId : neighborIds)
+			{
+				const auto neighbor = m_caves.at(neighborId);
+				cave->ConnectTo(neighbor);
+			}
+		}
+	}
 
-        const auto cave = m_caves.at(caveId);
+	const std::shared_ptr<Cave>& Dungeon::FindCave(const int caveId)
+	{
+		const auto caveItr = m_caves.find(caveId);
+		return caveItr->second;
+	}
 
-        denizen->EnterCave(cave);
-        cave->AddDenizen(denizen, observeEntrance);
-    }
+	void Dungeon::AddToCave(const std::shared_ptr<Denizen>& denizen, const int caveId, const bool observeEntrance)
+	{
+		m_caveDenizens.emplace(denizen->GetIdentifier(), denizen);
 
-    void Dungeon::Move(const DenizenIdentifier& identifier, const int destinationCave)
-    {
-        const auto thing = m_caveDenizens[identifier];
+		const auto cave = m_caves.at(caveId);
 
-        const auto startCave = thing->GetCurrentCave().lock();
+		denizen->EnterCave(cave);
+		cave->AddDenizen(denizen, observeEntrance);
+	}
 
-        thing->RemoveFromCave();
-        startCave->RemoveDenizen(identifier);
+	void Dungeon::Move(const DenizenIdentifier& identifier, const int destinationCave)
+	{
+		const auto thing = m_caveDenizens[identifier];
 
-        const auto destCave = m_caves[destinationCave];
+		const auto startCave = thing->GetCurrentCave().lock();
 
-        thing->EnterCave(destCave);
-        destCave->AddDenizen(thing, true);
-    }
+		thing->RemoveFromCave();
+		startCave->RemoveDenizen(identifier);
 
-    bool Dungeon::LegalMove(const std::shared_ptr<Denizen>& denizen, const int destinationCave)
-    {
-        const auto denizenCave = denizen->GetCurrentCave().lock();
-        const auto tunnelIds = denizenCave->GetConnectedIds();
+		const auto destCave = m_caves[destinationCave];
 
-        return std::ranges::find(tunnelIds, destinationCave) != tunnelIds.end();
-    }
+		thing->EnterCave(destCave);
+		destCave->AddDenizen(thing, true);
+	}
 
-    void Dungeon::MakeMove(const DungeonMove operation, const std::vector<int>& destinationIds)
-    {
-        // First, find the hunter.
-        const auto hunter = std::dynamic_pointer_cast<Hunter>(m_caveDenizens.at({ Category::Hunter, 0 }));
+	bool Dungeon::LegalMove(const std::shared_ptr<Denizen>& denizen, const int destinationCave)
+	{
+		const auto denizenCave = denizen->GetCurrentCave().lock();
+		const auto tunnelIds = denizenCave->GetConnectedIds();
 
-        const auto currentCave = hunter->GetCurrentCave().lock();
+		return std::ranges::find(tunnelIds, destinationCave) != tunnelIds.end();
+	}
 
-        if (operation == DungeonMove::Move)
-        {
-            // Check move validity.
-            if (LegalMove(hunter, destinationIds.front()))
-            {
-                Move(hunter->GetIdentifier(), destinationIds.front());
-            }
-            else
-            {
-                m_providers.m_notification.Notify(UserNotification::Notification::ReportIllegalMove, destinationIds.front());
-            }
-        }
+	void Dungeon::MakeMove(const DungeonMove operation, const std::vector<int>& destinationIds)
+	{
+		// First, find the hunter.
+		const auto hunter = std::dynamic_pointer_cast<Hunter>(m_caveDenizens.at({ Category::Hunter, 0 }));
 
-        if (operation == DungeonMove::Shoot)
-        {
-            // Retrieve an arrow.
-            auto arrow = hunter->GetArrow();
+		const auto currentCave = hunter->GetCurrentCave().lock();
 
-            const auto startCave = hunter->GetCurrentCave().lock();
+		if (destinationIds.empty())
+		{
+			throw std::invalid_argument("Destination Cave(s) is empty - Please input cave(s) to move or shoot into");
+		}
 
-            AddToCave(arrow, startCave->GetCaveId(), false);
+		if (operation == DungeonMove::Move)
+		{
+			// Check move validity.
+			if (LegalMove(hunter, destinationIds.front()))
+			{
+				Move(hunter->GetIdentifier(), destinationIds.front());
+			}
+			else
+			{
+				m_providers.m_notification.Notify(UserNotification::Notification::ReportIllegalMove, destinationIds.front());
+			}
+		}
 
-            for (auto caveId : destinationIds)
-            {
-                if (!LegalMove(arrow, caveId))
-                {
-                    MoveDenizenRandomly(arrow);
-                }
-                else
-                {
-                    Move(arrow->GetIdentifier(), caveId);
-                }
+		if (operation == DungeonMove::Shoot)
+		{
+			// Retrieve an arrow.
+			auto arrow = hunter->GetArrow();
 
-                if (!m_providers.m_change.IsPlaying())
-                {
-                    break;
-                }
-            }
+			const auto startCave = hunter->GetCurrentCave().lock();
 
-            // Once the arrow is done, remove it.
-            const auto currentArrowCave = arrow->GetCurrentCave().lock();
+			AddToCave(arrow, startCave->GetCaveId(), false);
 
-            arrow->RemoveFromCave();
-            currentArrowCave->RemoveDenizen(arrow->GetIdentifier());
-            m_caveDenizens.erase(arrow->GetIdentifier());
+			for (auto caveId : destinationIds)
+			{
+				if (!LegalMove(arrow, caveId))
+				{
+					MoveDenizenRandomly(arrow);
+				}
+				else
+				{
+					Move(arrow->GetIdentifier(), caveId);
+				}
 
-            if (m_providers.m_change.IsPlaying())
-            {
-                // We missed the Wumpus, and we're not dead.
-                m_providers.m_notification.Notify(UserNotification::Notification::ObserveMiss);
+				if (!m_providers.m_change.IsPlaying())
+				{
+					break;
+				}
+			}
 
-                // Move the wumpus.
-                m_providers.m_notification.Notify(UserNotification::Notification::WumpusAwoken);
+			// Once the arrow is done, remove it.
+			const auto currentArrowCave = arrow->GetCurrentCave().lock();
 
-                MoveDenizenRandomly(m_caveDenizens.at({ Category::Wumpus, 0 }));
-            }
+			arrow->RemoveFromCave();
+			currentArrowCave->RemoveDenizen(arrow->GetIdentifier());
+			m_caveDenizens.erase(arrow->GetIdentifier());
 
-            // The wumpus move could have ended the game, so check again.
-            if (m_providers.m_change.IsPlaying() && hunter->OutOfArrows())
-            {
-                m_providers.m_notification.Notify(UserNotification::Notification::ObserveOutOfArrows);
-                m_providers.m_change.GameOver(false);
-            }
-        }
-    }
+			if (m_providers.m_change.IsPlaying())
+			{
+				// We missed the Wumpus, and we're not dead.
+				m_providers.m_notification.Notify(UserNotification::Notification::ObserveMiss);
 
-    void Dungeon::MoveDenizenRandomly(const DenizenIdentifier& identifier)
-    {
-        MoveDenizenRandomly(m_caveDenizens.at(identifier));
-    }
+				// Move the wumpus.
+				m_providers.m_notification.Notify(UserNotification::Notification::WumpusAwoken);
 
-    void Dungeon::MoveDenizenRandomly(const std::shared_ptr<Denizen>& denizen)
-    {
-        const auto denizenCave = denizen->GetCurrentCave().lock();
-        const auto caveTunnels = denizenCave->GetConnectedIds();
+				MoveDenizenRandomly(m_caveDenizens.at({ Category::Wumpus, 0 }));
+			}
 
-        const auto newRandomId = m_providers.m_random.MakeRandomTunnel();
+			// The wumpus move could have ended the game, so check again.
+			if (m_providers.m_change.IsPlaying() && hunter->OutOfArrows())
+			{
+				m_providers.m_notification.Notify(UserNotification::Notification::ObserveOutOfArrows);
+				m_providers.m_change.GameOver(false);
+			}
+		}
+	}
 
-        Move(denizen->GetIdentifier(), caveTunnels[newRandomId]);
-    }
+	void Dungeon::MoveDenizenRandomly(const DenizenIdentifier& identifier)
+	{
+		MoveDenizenRandomly(m_caveDenizens.at(identifier));
+	}
+
+	void Dungeon::MoveDenizenRandomly(const std::shared_ptr<Denizen>& denizen)
+	{
+		const auto denizenCave = denizen->GetCurrentCave().lock();
+		const auto caveTunnels = denizenCave->GetConnectedIds();
+
+		const auto newRandomId = m_providers.m_random.MakeRandomTunnel();
+
+		Move(denizen->GetIdentifier(), caveTunnels[newRandomId]);
+	}
 }

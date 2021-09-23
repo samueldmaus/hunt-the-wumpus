@@ -6,24 +6,24 @@
 
 namespace TestHuntTheWumpus
 {
-    TEST(ArrowSuite, Arrow_HasProperAttributes)
-    {
-        TestEnvironment env;
+	TEST(ArrowSuite, Arrow_HasProperAttributes)
+	{
+		TestEnvironment env;
 
-        const HuntTheWumpus::Arrow arrow(0, env.m_context);
+		const HuntTheWumpus::Arrow arrow(0, env.m_context);
 
-        const auto &properties = arrow.Properties();
+		const auto& properties = arrow.Properties();
 
-        CHECK(!properties.m_carryableByBats);
-        CHECK(!properties.m_isEdible);
-        CHECK(!properties.m_reportMovement);
-        CHECK(properties.m_fatalToHunter);
-        CHECK(properties.m_fatalToWumpus);
+		CHECK(!properties.m_carryableByBats);
+		CHECK(!properties.m_isEdible);
+		CHECK(!properties.m_reportMovement);
+		CHECK(properties.m_fatalToHunter);
+		CHECK(properties.m_fatalToWumpus);
 
-        CHECK_EQUAL(2, arrow.GetPriority());
+		CHECK_EQUAL(2, arrow.GetPriority());
 
-        const auto& id = arrow.GetIdentifier();
+		const auto& id = arrow.GetIdentifier();
 
-        CHECK_EQUAL(HuntTheWumpus::Category::Arrow, id.m_category);
-    }
+		CHECK_EQUAL(HuntTheWumpus::Category::Arrow, id.m_category);
+	}
 }

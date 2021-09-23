@@ -6,32 +6,26 @@
 
 namespace HuntTheWumpus
 {
-    Pit::Pit(const int pitInstance, Context& providers)
-        : Denizen({ Category::Pit, pitInstance }, { false, false, true, false, false }, providers)
-    {
-    }
+	Pit::Pit(const int pitInstance, Context& providers)
+		: Denizen({ Category::Pit, pitInstance }, { false, false, true, false, false }, providers)
+	{
+	}
 
-    int Pit::GetPriority() const
-    {
-        return 4;
-    }
+	bool Pit::ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger)
+	{
+		if (trigger->Properties().m_isEdible)
+		{
+			m_providers.m_notification.Notify(UserNotification::Notification::PitTriggered);
+			m_providers.m_change.GameOver(false);
 
-    bool Pit::ObserveCaveEntrance(const std::shared_ptr<Denizen>& trigger)
-    {
-        if (trigger->Properties().m_isEdible)
-        {
-            m_providers.m_notification.Notify(UserNotification::Notification::PitTriggered);
-            m_providers.m_change.GameOver(false);
+			return true;
+		}
 
-            return true;
-        }
+		return false;
+	}
 
-        return false;
-    }
-
-    void Pit::ReportPresence() const
-    {
-        m_providers.m_notification.Notify(UserNotification::Notification::ObservePit);
-    }
-
+	void Pit::ReportPresence() const
+	{
+		m_providers.m_notification.Notify(UserNotification::Notification::ObservePit);
+	}
 }

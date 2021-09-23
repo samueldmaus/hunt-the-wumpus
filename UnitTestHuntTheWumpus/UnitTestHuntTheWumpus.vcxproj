@@ -92,12 +92,13 @@
     <ClCompile Include="TestArrow.cpp" />
     <ClCompile Include="TestBat.cpp" />
     <ClCompile Include="TestCave.cpp" />
-    <ClCompile Include="TestDenizen.cpp" />
+    <ClCompile Include="TestCustomAssert.cpp" />
     <ClCompile Include="TestDungeon.cpp" />
     <ClCompile Include="TestHelperRandomProvider.h" />
     <ClCompile Include="TestHelperTestEnvironment.cpp" />
     <ClCompile Include="TestHunter.cpp" />
     <ClCompile Include="TestPit.cpp" />
+    <ClCompile Include="TestThingsInCave.cpp" />
     <ClCompile Include="TestWumpus.cpp" />
     <ClCompile Include="UnitTestHuntTheWumpus.cpp" />
   </ItemGroup>

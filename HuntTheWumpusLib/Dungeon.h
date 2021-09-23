@@ -13,80 +13,80 @@
 
 namespace HuntTheWumpus
 {
-    enum class DungeonMove
-    {
-        Move,
-        Shoot
-    };
+	enum class DungeonMove
+	{
+		Move,
+		Shoot
+	};
 
-    class IDungeon
-    {
-    public:
-        
-        IDungeon() = default;
-        virtual ~IDungeon() = default;
+	class IDungeon
+	{
+	public:
 
-        virtual const std::shared_ptr<Cave> &FindCave(int caveId) = 0;
-        virtual void Move(const DenizenIdentifier &identifier, int destinationCave) = 0;
-        virtual void MoveDenizenRandomly( const DenizenIdentifier &identifier ) = 0;
+		IDungeon() = default;
+		virtual ~IDungeon() = default;
 
-        IDungeon(const IDungeon &) = default;
-        IDungeon(IDungeon &&) = default;
-        IDungeon &operator=(const IDungeon &) = default;
-        IDungeon &operator=(IDungeon &&) = default;
-    };
+		virtual const std::shared_ptr<Cave>& FindCave(int caveId) = 0;
+		virtual void Move(const DenizenIdentifier& identifier, int destinationCave) = 0;
+		virtual void MoveDenizenRandomly(const DenizenIdentifier& identifier) = 0;
 
-    class Dungeon final : public IDungeon
-    {
-    public:
+		IDungeon(const IDungeon&) = default;
+		IDungeon(IDungeon&&) = default;
+		IDungeon& operator=(const IDungeon&) = default;
+		IDungeon& operator=(IDungeon&&) = default;
+	};
 
-        explicit Dungeon(Context &providers);
-        ~Dungeon() override = default;
+	class Dungeon final : public IDungeon
+	{
+	public:
 
-        const std::shared_ptr<Cave> &FindCave(int caveId) override;
-        void Move(const DenizenIdentifier &identifier, int destinationCave) override;
-        void MoveDenizenRandomly( const DenizenIdentifier &identifier ) override;
+		explicit Dungeon(Context& providers);
+		~Dungeon() override = default;
 
-        void MakeMove(DungeonMove operation, const std::vector<int> &destinationIds);
-        static bool LegalMove(const std::shared_ptr<Denizen> &denizen, int destinationCave);
+		const std::shared_ptr<Cave>& FindCave(int caveId) override;
+		void Move(const DenizenIdentifier& identifier, int destinationCave) override;
+		void MoveDenizenRandomly(const DenizenIdentifier& identifier) override;
 
-        Dungeon(const Dungeon &) = delete;
-        Dungeon(Dungeon &&) = delete;
-        Dungeon &operator=(const Dungeon &) = delete;
-        Dungeon &operator=(Dungeon &&) = delete;
+		void MakeMove(DungeonMove operation, const std::vector<int>& destinationIds);
+		static bool LegalMove(const std::shared_ptr<Denizen>& denizen, int destinationCave);
 
-    private:
+		Dungeon(const Dungeon&) = delete;
+		Dungeon(Dungeon&&) = delete;
+		Dungeon& operator=(const Dungeon&) = delete;
+		Dungeon& operator=(Dungeon&&) = delete;
 
-        template<class Denizen> void MakeDenizen(int instance)
-        {
-            auto newDenizen = std::make_shared<Denizen>(instance, m_providers);
+	private:
 
-            auto DenizenPlaced = false;
+		template<class Denizen> void MakeDenizen(int instance)
+		{
+			auto newDenizen = std::make_shared<Denizen>(instance, m_providers);
 
-            while (!DenizenPlaced)
-            {
-                const auto DenizenCave = m_providers.m_random.MakeRandomCave();
+			auto DenizenPlaced = false;
 
-                // Verify that cave does not have a like Denizen in it.
-                if(m_caves[DenizenCave]->HasDenizen(newDenizen->GetIdentifier()))
-                {
-                    continue;
-                }
+			while (!DenizenPlaced)
+			{
+				const auto DenizenCave = m_providers.m_random.MakeRandomCave();
 
-                AddToCave(newDenizen, DenizenCave, false);
+				// Verify that cave does not have a like Denizen in it.
+				if (m_caves[DenizenCave]->HasDenizen(newDenizen->GetIdentifier()))
+				{
+					continue;
+				}
 
-                DenizenPlaced = true;
-            }
-        }
+				AddToCave(newDenizen, DenizenCave, false);
 
-        void MoveDenizenRandomly( const std::shared_ptr<Denizen> &denizen );
+				DenizenPlaced = true;
+			}
+		}
 
-        void Initialize(Context &providers);
-        void MakeTunnels();
-        void AddToCave(const std::shared_ptr<Denizen> &denizen, int caveId, bool observeEntrance);
+		void MoveDenizenRandomly(const std::shared_ptr<Denizen>& denizen);
 
-        Context &m_providers;
-        std::unordered_map<DenizenIdentifier, std::shared_ptr<Denizen>, DenizenIdentifierHasher> m_caveDenizens;
-        std::unordered_map<int, std::shared_ptr<Cave>> m_caves;
-    };
+		void Initialize(Context& providers);
+		void MakeTunnels();
+		void AddToCave(const std::shared_ptr<Denizen>& denizen, int caveId, bool observeEntrance);
+
+		Context& m_providers;
+		std::unordered_map<DenizenIdentifier, std::shared_ptr<Denizen>, DenizenIdentifierHasher> m_caveDenizens;
+		std::unordered_map<int, std::shared_ptr<Cave>> m_caves;
+	};
 }
