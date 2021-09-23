@@ -6,9 +6,10 @@ Certificate in C++ Programming through the University of Washington Professional
 
 - Rules
 There are 3 hazards:
-	A bottomless pit (you will feel a breeze nearby).
-	A colony of bats that will pick you up and drop you in a random space--including potentially deadly spaces (you will hear flapping nearby).
-	A fearsome, hungry, and unbathed wumpus (you will smell it nearby).
+A bottomless pit (you will feel a breeze nearby).
+A colony of bats that will pick you up and drop you in a random space--including potentially deadly spaces (you will hear flapping nearby).
+A fearsome, hungry, and unbathed wumpus (you will smell it nearby).
+
 The wumpus is heavy; bats cannot lift him.
 The wumpus is covered in suckers; he won't fall down the bottomless pit.
 Firing an arrow that misses the wumpus may cause it to move.
